@@ -1,0 +1,1 @@
+https://api.instagram.com/oauth/authorize/?client_id=65f5b5b1a9f648d4a899bd28e96fcbda&redirect_uri=https%3A%2F%2Fapi.carlbennett.me%2Foauth%2Fcallback%3Fvendor%3Doauth_ig&response_type=code&scope=basic
