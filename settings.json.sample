@@ -1,0 +1,20 @@
+{
+  "HipChat": {
+    "webhook_room_map": [
+      {
+        "room_api_token": "abcxyz",
+        "room_id": -1,
+        "webhook_id": -1
+      }
+    ]
+  },
+  "MySQL": {
+    "character_set": "utf8",
+    "collate": "utf8_unicode_ci",
+    "connect_timeout": 5,
+    "hostname": "localhost",
+    "name": "carlbennett-api",
+    "password": "",
+    "username": ""
+  }
+}
