@@ -3,7 +3,6 @@
 namespace CarlBennett\API\Libraries;
 
 use CarlBennett\API\Controllers\HipChat as HipChatController;
-use CarlBennett\API\Controllers\OAuth as OAuthController;
 use CarlBennett\API\Controllers\Status as StatusController;
 use CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
 
@@ -139,9 +138,6 @@ class Router {
     switch ($path) {
       case "hipchat":
         $controller = new HipChatController();
-      break;
-      case "oauth":
-        $controller = new OAuthController();
       break;
       case "status":
       case "status.json":
