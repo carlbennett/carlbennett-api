@@ -4,7 +4,9 @@ namespace CarlBennett\API\Libraries;
 
 use CarlBennett\API\Controllers\HipChat as HipChatController;
 use CarlBennett\API\Controllers\Status as StatusController;
+use CarlBennett\API\Libraries\Common;
 use CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
+use CarlBennett\API\Libraries\Exceptions\ServiceUnavailableException;
 
 class Router {
 
@@ -130,6 +132,9 @@ class Router {
   }
 
   public function route() {
+    if (Common::$settings->Router->maintenance) {
+      throw new ServiceUnavailableException();
+    }
     $path = $this->getRequestPathArray()[1];
     if (extension_loaded("newrelic")) {
       newrelic_name_transaction("/" . $path);

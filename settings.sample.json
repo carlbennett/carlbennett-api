@@ -16,5 +16,9 @@
     "name": "carlbennett-api",
     "password": "",
     "username": ""
+  },
+  "Router": {
+    "maintenance": true,
+    "map": []
   }
 }
