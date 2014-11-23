@@ -43,17 +43,6 @@ class HipChat {
       newrelic_add_custom_parameter("event_result", $eventResult);
     }
 
-    $f = fopen("./webhook.log", "w");
-    fwrite($f, json_encode([
-      "eventResult" => $eventResult,
-      "webhook_post_data" => $webhook_post_data,
-      "webhook_id" => $webhook_id,
-      "room_id" => $room_id,
-      "room_api_token" => $room_api_token,
-      "event" => $event,
-    ], JSON_PRETTY_PRINT)."\n");
-    fclose($f);
-
     return $eventResult;
   }
 
