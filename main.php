@@ -46,6 +46,10 @@ function main() {
       $json["error"]["file"] = Common::stripLeftPattern($e->getFile(), "/home/nginx/carlbennett-api");
       $json["error"]["line"] = $e->getLine();
     }
+    if (extension_loaded("newrelic")) {
+      newrelic_add_custom_parameter("error_data", json_encode($json, JSON_PRETTY_PRINT));
+      newrelic_notice_error(json_encode($json, JSON_PRETTY_PRINT), $e);
+    }
     die(json_encode($json, $flags));
   });
 
@@ -68,6 +72,10 @@ function main() {
       $json["error"]["message"] = $errstr;
       $json["error"]["file"] = Common::stripLeftPattern($errfile, "/home/nginx/carlbennett-api");
       $json["error"]["line"] = $errline;
+    }
+    if (extension_loaded("newrelic")) {
+      newrelic_add_custom_parameter("error_data", json_encode($json, JSON_PRETTY_PRINT));
+      newrelic_notice_error($errno, $errstr, $errfile, $errline, $errcontext);
     }
     die(json_encode($json, $flags));
   });
