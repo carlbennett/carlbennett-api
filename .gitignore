@@ -1,0 +1,10 @@
+# Git Ignore File
+# ---------------
+# See <http://git-scm.com/docs/gitignore> for reference and the formatting below.
+#
+
+# Ignore the settings specific for this installation:
+/settings.json
+
+# Ignore log files
+/*.log
