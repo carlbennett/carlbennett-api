@@ -21,7 +21,7 @@ class WeatherReport {
     if ($degree >= 225 && $degree < 270) return "SW";
     if ($degree >= 270 && $degree < 315) return "W";
     if ($degree >= 315 && $degree < 360) return "NW";
-    return "?";
+    return "Unknown (" . (int)$degree . "&deg;)";
   }
 
   public function getAsMessage(&$webhook_post_data) {
