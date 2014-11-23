@@ -132,12 +132,12 @@ class Router {
   }
 
   public function route() {
-    if (Common::$settings->Router->maintenance) {
-      throw new ServiceUnavailableException();
-    }
     $path = $this->getRequestPathArray()[1];
     if (extension_loaded("newrelic")) {
       newrelic_name_transaction("/" . $path);
+    }
+    if (Common::$settings->Router->maintenance) {
+      throw new ServiceUnavailableException();
     }
     ob_start();
     switch ($path) {

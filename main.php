@@ -48,7 +48,7 @@ function main() {
     }
     if (extension_loaded("newrelic")) {
       newrelic_add_custom_parameter("error_data", json_encode($json, JSON_PRETTY_PRINT));
-      newrelic_notice_error(json_encode($json, JSON_PRETTY_PRINT), $e);
+      newrelic_notice_error($e->getMessage(), $e);
     }
     die(json_encode($json, $flags));
   });
@@ -88,6 +88,7 @@ function main() {
 
   if (extension_loaded("newrelic")) {
     newrelic_disable_autorum();
+    newrelic_name_transaction("null");
   }
 
   Common::$settings = json_decode(file_get_contents("./settings.json"));
