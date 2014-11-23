@@ -89,6 +89,7 @@ function main() {
   if (extension_loaded("newrelic")) {
     newrelic_disable_autorum();
     newrelic_name_transaction("null");
+    newrelic_add_custom_parameter("REMOTE_ADDR", getenv("REMOTE_ADDR"));
   }
 
   Common::$settings = json_decode(file_get_contents("./settings.json"));
