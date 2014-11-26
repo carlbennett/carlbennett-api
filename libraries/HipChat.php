@@ -2,6 +2,7 @@
 
 namespace CarlBennett\API\Libraries;
 
+use CarlBennett\API\Libraries\ColorNames;
 use CarlBennett\API\Libraries\Common;
 use CarlBennett\API\Libraries\WeatherReport;
 
@@ -48,11 +49,6 @@ class HipChat {
 
   protected function handleWebhookMessage(&$webhook_post_data, $room_id, $room_api_token, $message) {
     $trimmed_message = trim($message);
-    if (strtolower($trimmed_message) == "ping") {
-      $message = str_replace("i", "o", $message); $message = str_replace("I", "O", $message);
-      $response = $this->sendMessage($room_id, $room_api_token, "gray", $message, "text", true);
-      return ($response && $response->code == 204);
-    }
     if (substr($trimmed_message, 0, 9) == "@weather ") {
       $location = substr($trimmed_message, 9);
       $weatherinfo = (new WeatherReport($location))->getAsMessage($webhook_post_data);
@@ -61,6 +57,17 @@ class HipChat {
     }
     if (substr($message, 0, 6) == "@echo ") {
       $response = $this->sendMessage($room_id, $room_api_token, "gray", substr($message, 6), "text", true);
+      return ($response && $response->code == 204);
+    }
+    if ($color = ColorNames::colorScanString($message)) {
+      $response = $this->sendMessage($room_id, $room_api_token, "gray",
+        $color->name . " #" . $color->hex,
+        "text", true);
+      return ($response && $response->code == 204);
+    }
+    if (strtolower($trimmed_message) == "ping") {
+      $message = str_replace("i", "o", $message); $message = str_replace("I", "O", $message);
+      $response = $this->sendMessage($room_id, $room_api_token, "gray", $message, "text", true);
       return ($response && $response->code == 204);
     }
     return false;
