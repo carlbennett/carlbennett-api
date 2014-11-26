@@ -168,11 +168,11 @@ class ColorNames {
     return false;
   }
 
-  public function colorScanString($string) {
-    $search = filter_var(strtolower($string), FILTER_SANITIZE_STRING);
+  public function colorMatchName($string) {
+    $haystack = trim(filter_var(strtolower($string), FILTER_SANITIZE_STRING));
+    $haystack = str_replace(" ", "", $haystack);
     foreach ($this->colorMap as $key => $val) {
-      if (stripos($search, $key) === false
-        && stripos($search, $val) === false)
+      if ($haystack != $key && stripos($haystack, "#" . $key) === false)
         continue;
       $color = new \StdClass();
       $color->name = $key;
@@ -184,9 +184,10 @@ class ColorNames {
 
   public function removeColor($name) {
     if (!isset($this->colorMap[$name])) {
-      throw new \Exception("Value not set");
+      return false;
     }
-    return unset($this->colorMap[$name]);
+    unset($this->colorMap[$name]);
+    return true;
   }
 
 }

@@ -60,9 +60,9 @@ class HipChat {
       return ($response && $response->code == 204);
     }
     $colors = new ColorNames();
-    if ($color = $colors->colorScanString($message)) {
+    if ($color = $colors->colorMatchName($message)) {
       $response = $this->sendMessage($room_id, $room_api_token, "gray",
-        $color->name . " #" . $color->hex,
+        "#" . $color->hex,
         "text", true);
       return ($response && $response->code == 204);
     }
