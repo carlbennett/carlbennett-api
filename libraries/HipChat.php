@@ -82,7 +82,7 @@ class HipChat {
         "message" => $message,
         "message_format" => $format,
         "notify" => $notify,
-      ]
+      ], "application/json;charset=utf-8"
     );
   }
 

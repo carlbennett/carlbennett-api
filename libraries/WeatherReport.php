@@ -64,7 +64,7 @@ class WeatherReport {
       . filter_var($this->location, FILTER_UNSAFE_RAW)
       . "\")";
     $url = "https://query.yahooapis.com/v1/public/yql?q=" . urlencode($query) . "&format=json&env=store://datatables.org/alltableswithkeys";
-    $response = Common::curlRequest($url, null);
+    $response = Common::curlRequest($url, null, "");
     if (!$response || $response->code != 200 || empty($response->data)) {
       // Not a valid response
       return false;

@@ -6,7 +6,7 @@ class Common {
 
   public static $settings;
 
-  public static function curlRequest($url, $post_content) {
+  public static function curlRequest($url, $post_content = null, $content_type = "") {
     $curl = curl_init();
     $time = microtime(true);
 
@@ -20,7 +20,9 @@ class Common {
     if (!is_null($post_content) && is_array($post_content)) {
       curl_setopt($curl, CURLOPT_POST, true);
       curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post_content));
-      curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: application/json;charset=utf-8"]);
+      if (!empty($content_type)) {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: " . $content_type]);
+      }
     }
 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
