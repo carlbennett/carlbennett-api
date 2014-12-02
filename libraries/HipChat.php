@@ -66,6 +66,17 @@ class HipChat {
         "text", true);
       return ($response && $response->code == 204);
     }
+    if (preg_match("/^.*is\s*it\s*lunch\s*time\s*yet.*$/", strtolower($message))) {
+      $currentTime  = new \DateTime("now", new \DateTimeZone("America/Chicago"));
+      $lunchtime    = new \DateTime("12PM", new \DateTimeZone("America/Chicago"));
+      if ($currentTime->format("H") >= 12) {
+        $lunchtime->add(new \DateInterval("P1D"));
+      }
+      $diffTime     = $currentTime->diff($lunchtime);
+      $response     = $this->sendMessage($room_id, $room_api_token, "gray",
+        "It'll be lunchtime in " . Common::intervalToString($diffTime, "a moment") . ".", "text", true);
+      return ($response && $response->code == 204);
+    }
     if (strtolower($trimmed_message) == "ping") {
       $message = str_replace("i", "o", $message); $message = str_replace("I", "O", $message);
       $response = $this->sendMessage($room_id, $room_api_token, "gray", $message, "text", true);

@@ -37,6 +37,19 @@ class Common {
     return $response;
   }
 
+  public static function intervalToString($di, $zero_interval = "") {
+    if (!$di instanceof \DateInterval) return null;
+    $buf = "";
+    if ($di->y) { if ($buf) $buf .= ", "; $buf .= $di->y . " year";   if ($di->y != 1) $buf .= "s"; }
+    if ($di->m) { if ($buf) $buf .= ", "; $buf .= $di->m . " month";  if ($di->m != 1) $buf .= "s"; }
+    if ($di->d) { if ($buf) $buf .= ", "; $buf .= $di->d . " day";    if ($di->d != 1) $buf .= "s"; }
+    if ($di->h) { if ($buf) $buf .= ", "; $buf .= $di->h . " hour";   if ($di->h != 1) $buf .= "s"; }
+    if ($di->i) { if ($buf) $buf .= ", "; $buf .= $di->i . " minute"; if ($di->i != 1) $buf .= "s"; }
+    if ($di->s) { if ($buf) $buf .= ", "; $buf .= $di->s . " second"; if ($di->s != 1) $buf .= "s"; }
+    if (!$buf) $buf = $zero_interval;
+    return $buf;
+  }
+
   public static function isBrowser($user_agent) {
     // Browser names
     if (stripos($user_agent, "Firefox" ) !== false) return true;
