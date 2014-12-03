@@ -17,9 +17,13 @@ class Common {
 
     curl_setopt($curl, CURLOPT_URL, $url);
 
-    if (!is_null($post_content) && is_array($post_content)) {
+    if ($post_content) {
       curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($post_content));
+      if (PHP_VERSION >= 5.5) {
+        // disable processing of @ symbol as a filename in CURLOPT_POSTFIELDS.
+        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
+      }
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $post_content);
       if (!empty($content_type)) {
         curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: " . $content_type]);
       }

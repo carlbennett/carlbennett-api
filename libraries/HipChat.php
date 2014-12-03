@@ -88,12 +88,12 @@ class HipChat {
   public function sendMessage($room_id, $room_api_token, $color, $message, $format = "html", $notify = true) {
     return Common::curlRequest(
       "https://api.hipchat.com/v2/room/" . urlencode($room_id) . "/notification?"
-      . "auth_token=" . urlencode($room_api_token), [
+      . "auth_token=" . urlencode($room_api_token), json_encode([
         "color" => $color,
         "message" => $message,
         "message_format" => $format,
         "notify" => $notify,
-      ], "application/json;charset=utf-8"
+      ]), "application/json;charset=utf-8"
     );
   }
 
