@@ -47,6 +47,12 @@ class Common {
     if ($di->i) { if ($buf) $buf .= ", "; $buf .= $di->i . " minute"; if ($di->i != 1) $buf .= "s"; }
     if ($di->s) { if ($buf) $buf .= ", "; $buf .= $di->s . " second"; if ($di->s != 1) $buf .= "s"; }
     if (!$buf) $buf = $zero_interval;
+    // Splice the "and" keyword and take care of commas if necessary. We support the Oxford comma!
+    if (strpos($buf, ", ") !== false) {
+      $buf = explode(", ", $buf); $i = count($buf) - 1;
+      $buf[$i] = "and " . $buf[$i];
+      if ($i == 1) $buf = implode(" ", $buf); else $buf = implode(", ", $buf);
+    }
     return $buf;
   }
 
