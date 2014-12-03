@@ -91,7 +91,7 @@ class Common {
       case E_USER_WARNING:      return "E_USER_WARNING";      /* 512   */
       case E_USER_NOTICE:       return "E_USER_NOTICE";       /* 1024  */
       case E_STRICT:            return "E_STRICT";            /* 2048  */
-      case E_RECOVERABLE_ERROR: return "R_RECOVERABLE_ERROR"; /* 4096  */
+      case E_RECOVERABLE_ERROR: return "E_RECOVERABLE_ERROR"; /* 4096  */
       case E_DEPRECATED:        return "E_DEPRECATED";        /* 8192  */
       case E_USER_DEPRECATED:   return "E_USER_DEPRECATED";   /* 16384 */
       case E_ALL:               return "E_ALL";               /* 32767 */
