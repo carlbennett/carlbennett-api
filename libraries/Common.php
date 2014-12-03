@@ -6,14 +6,15 @@ class Common {
 
   public static $settings;
 
-  public static function curlRequest($url, $post_content = null, $content_type = "") {
+  public static function curlRequest($url, $post_content = null,
+      $content_type = "", $connect_timeout = 5, $max_redirects = 10) {
     $curl = curl_init();
     $time = microtime(true);
 
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
 
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, $max_redirects);
 
     curl_setopt($curl, CURLOPT_URL, $url);
 
@@ -25,7 +26,9 @@ class Common {
       }
       curl_setopt($curl, CURLOPT_POSTFIELDS, $post_content);
       if (!empty($content_type)) {
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: " . $content_type]);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+          "Content-Type: " . $content_type
+        ]);
       }
     }
 
