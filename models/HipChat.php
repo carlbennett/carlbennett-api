@@ -3,6 +3,7 @@
 namespace CarlBennett\API\Models;
 
 use CarlBennett\API\Libraries\Common;
+use CarlBennett\API\Libraries\Exceptions\MethodNotAllowedException;
 use CarlBennett\API\Libraries\HipChat as HipChatLib;
 use CarlBennett\API\Libraries\Model;
 use CarlBennett\API\Libraries\Router;
@@ -19,9 +20,13 @@ class HipChat extends Model {
   }
 
   public function webhook(Router &$router) {
-    $this->function       = "webhook";
+    $this->function = "webhook";
+    if ($router->getRequestMethod() != "POST") {
+      throw new MethodNotAllowedException(["POST"]);
+      return;
+    }
     $hipchat_webhook_data = $router->getRequestBodyArray();
-    $this->result         = $this->hipchat->handleWebhook($hipchat_webhook_data);
+    $this->result = $this->hipchat->handleWebhook($hipchat_webhook_data);
   }
 
 }

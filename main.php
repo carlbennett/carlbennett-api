@@ -34,6 +34,12 @@ function main() {
     header("Content-Type: application/json;charset=utf-8");
     header("Expires: 0");
     header("Pragma: max-age=0");
+    if ($e instanceof APIException) {
+      $additional_headers = $e->getHTTPResponseHeaders();
+      foreach ($additional_headers as $key => $val) {
+        header($key . ": " . $val);
+      }
+    }
     $flags = (Common::isBrowser(getenv("HTTP_USER_AGENT")) ? JSON_PRETTY_PRINT : 0);
     $json = [
       "error" => [
