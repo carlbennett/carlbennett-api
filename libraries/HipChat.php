@@ -22,10 +22,10 @@ class HipChat {
       }
     }
 
-    $eventResult = null;
+    $event_result = null;
     switch ($event) {
       case "room_message":
-        $eventResult = $this->handleWebhookMessage(
+        $event_result = $this->handleWebhookMessage(
           $webhook_post_data,
           $room_id,
           $room_api_token,
@@ -33,7 +33,7 @@ class HipChat {
         );
       break;
       default:
-        $eventResult = false;
+        $event_result = "invalid event";
     }
 
     if (extension_loaded("newrelic")) {
@@ -41,10 +41,10 @@ class HipChat {
       newrelic_add_custom_parameter("room_id", $room_id);
       newrelic_add_custom_parameter("webhook_id", $webhook_id);
       newrelic_add_custom_parameter("room_api_token", $room_api_token);
-      newrelic_add_custom_parameter("event_result", $eventResult);
+      newrelic_add_custom_parameter("event_result", $event_result);
     }
 
-    return $eventResult;
+    return $event_result;
   }
 
   protected function handleWebhookMessage(&$webhook_post_data, $room_id, $room_api_token, $message) {
@@ -53,7 +53,7 @@ class HipChat {
       $location = substr($trimmed_message, 9);
       $weatherinfo = (new WeatherReport($location))->getAsMessage($webhook_post_data);
       $response = $this->sendMessage($room_id, $room_api_token, $weatherinfo->color, $weatherinfo->message, $weatherinfo->format, true);
-      return ($response && $response->code == 204);
+      return [($response && $response->code == 204), $weatherinfo];
     }
     if (substr($message, 0, 6) == "@echo ") {
       $response = $this->sendMessage($room_id, $room_api_token, "gray", substr($message, 6), "text", true);
