@@ -94,6 +94,8 @@ class WeatherReport {
   public function standardizeReportHell() {
     $report                   = new \StdClass();
 
+    mt_srand(time() / 3600); // change the mt_rand() seed every hour.
+
     $report->city             = null;
     $report->country          = null;
     $report->region           = "Hell";
@@ -103,7 +105,7 @@ class WeatherReport {
     $report->wind_chill       = $report->condition[0];
     $report->wind_speed       = mt_rand(0, 5);
     $report->wind_direction   = mt_rand(0, 359);
-    $report->humidity         = 0;
+    $report->humidity         = mt_rand(90, 100);
     $report->sunrise          = null;
     $report->sunset           = null;
 
