@@ -100,8 +100,8 @@ class WeatherReport {
     $report->unit_temperature = "F";
     $report->unit_speed       = "mph";
     $report->condition        = [10000000000, "Blistering Hot"];
-    $report->wind_chill       = 0;
-    $report->wind_speed       = 0/*mt_rand(0, 5)*/;
+    $report->wind_chill       = $report->condition[0];
+    $report->wind_speed       = mt_rand(0, 5);
     $report->wind_direction   = mt_rand(0, 359);
     $report->humidity         = 0;
     $report->sunrise          = null;
