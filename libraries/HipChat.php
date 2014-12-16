@@ -4,6 +4,7 @@ namespace CarlBennett\API\Libraries;
 
 use CarlBennett\API\Libraries\ColorNames;
 use CarlBennett\API\Libraries\Common;
+use CarlBennett\API\Libraries\Magic8Ball;
 use CarlBennett\API\Libraries\WeatherReport;
 
 class HipChat {
@@ -75,6 +76,11 @@ class HipChat {
       $diffTime     = $currentTime->diff($lunchtime);
       $response     = $this->sendMessage($room_id, $room_api_token, "gray",
         "It'll be lunchtime in " . Common::intervalToString($diffTime, "a moment") . ".", "text", true);
+      return ($response && $response->code == 204);
+    }
+    if (preg_match("/^.*ball,.*\?.*/", strtolower($message))) {
+      $magic8ball = (new Magic8Ball())->getPrediction($message);
+      $response = $this->sendMessage($room_id, $room_api_token, "gray", $magic8ball);
       return ($response && $response->code == 204);
     }
     if (strtolower($trimmed_message) == "ping") {
