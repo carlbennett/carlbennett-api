@@ -13,6 +13,7 @@ class WeatherReport {
   }
 
   public static function directionString($degree) {
+    $degree %= 360;
     if ($degree >= 0   && $degree < 45 ) return "N";
     if ($degree >= 45  && $degree < 90 ) return "NE";
     if ($degree >= 90  && $degree < 135) return "E";
