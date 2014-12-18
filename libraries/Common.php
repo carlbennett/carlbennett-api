@@ -65,6 +65,7 @@ class Common {
 
   public static function isBrowser($user_agent) {
     // Browser names
+    if (stripos($user_agent, "Mozilla" ) !== false) return true;
     if (stripos($user_agent, "Firefox" ) !== false) return true;
     if (stripos($user_agent, "Chrome"  ) !== false) return true;
     if (stripos($user_agent, "Chromium") !== false) return true;
