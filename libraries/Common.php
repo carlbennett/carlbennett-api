@@ -2,9 +2,11 @@
 
 namespace CarlBennett\API\Libraries;
 
-class Common {
+final class Common {
 
   public static $settings;
+
+  private function __contruct() {} // Deny attempts to instantiate.
 
   public static function curlRequest($url, $post_content = null,
       $content_type = "", $connect_timeout = 5, $max_redirects = 10) {
