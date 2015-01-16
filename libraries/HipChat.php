@@ -49,7 +49,7 @@ class HipChat {
   }
 
   protected function handleWebhookMessage(&$webhook_post_data, $room_id, $room_api_token, $message) {
-    $trimmed_message = trim($message);
+    $trimmed_message = trim($message); $matches = [];
     if (substr($trimmed_message, 0, 9) == "@weather ") {
       $location = substr($trimmed_message, 9);
       $weatherinfo = (new WeatherReport($location))->getAsMessage($webhook_post_data);
@@ -81,6 +81,11 @@ class HipChat {
     if (preg_match("/^.*ball,.*\?.*/", strtolower($message))) {
       $magic8ball = (new Magic8Ball())->getPrediction($message);
       $response = $this->sendMessage($room_id, $room_api_token, "gray", $magic8ball);
+      return ($response && $response->code == 204);
+    }
+    if (preg_match("/^@google\s+(.*)$/", strtolower($message), $matches)) {
+      $response = $this->sendMessage($room_id, $room_api_token, "gray",
+        "https://www.google.com/search?q=" . urlencode($matches[1]), "text", true);
       return ($response && $response->code == 204);
     }
     if (strtolower($trimmed_message) == "ping") {
