@@ -12,7 +12,8 @@ class WeatherReport {
     $this->location = $location;
   }
 
-  public static function directionString($degree) {
+  public static function directionString($degree, $html) {
+    $deg = ($html ? "&deg;" : mb_convert_encoding(chr(176), 'UTF-8', 'ASCII'));
     $degree %= 360;
     if ($degree >= 0   && $degree < 45 ) return "N";
     if ($degree >= 45  && $degree < 90 ) return "NE";
@@ -22,7 +23,7 @@ class WeatherReport {
     if ($degree >= 225 && $degree < 270) return "SW";
     if ($degree >= 270 && $degree < 315) return "W";
     if ($degree >= 315 && $degree < 360) return "NW";
-    return "Unknown (" . (int)$degree . "&deg;)";
+    return "Unknown (" . (int)$degree . $deg . ")";
   }
 
   public function downloadReport() {
@@ -115,16 +116,49 @@ class WeatherReport {
     return $report;
   }
 
-  public function getAsMessage(&$webhook_post_data) {
-    $message = new \StdClass();
+  public function getAsHtml() {
     if ($this->location == 666 || strtolower($this->location) == "hell") {
-      $message->report = $this->standardizeReportHell();
+      $report = $this->standardizeReportHell();
     } else {
-      $message->report = $this->downloadReport();
-      $message->report = $this->standardizeReport($message->report);
+      $report = $this->downloadReport();
+      $report = $this->standardizeReport($report);
     }
-    $message->format = "html";
-    if (!$message->report) {
+    if (!$report) {
+      return false;
+    }
+    $message = ""
+      . "<b>Weather Report:</b> " . $report->location . "<br/>"
+      . "<b>Condition:</b> "
+        . $report->condition[1] . ", "
+        . number_format($report->condition[0]) . "&deg;"
+        . $report->unit_temperature . " "
+      . "<b>Wind Chill:</b> "
+        . number_format($report->wind_chill) . "&deg;"
+        . $report->unit_temperature . "<br/>"
+      . "<b>Humidity:</b> "
+        . $report->humidity . "% "
+      . "<b>Wind:</b> "
+        . ($report->wind_speed != 0 ? ""
+        . self::directionString($report->wind_direction, true)
+        . " at " : "")
+        . $report->wind_speed
+        . " "
+        . $report->unit_speed . "<br/>"
+      . (!empty($report->sunrise) &&
+         !empty($report->sunset) ? ""
+      . "<b>Sunrise:</b> "
+        . $report->sunrise . " "
+      . "<b>Sunset:</b> "
+        . $report->sunset . "<br/>" : "")
+    ;
+    return $message;
+  }
+
+  public function getAsMessage(&$webhook_post_data) {
+    $message          = new \StdClass();
+    $message->message = $this->getAsHtml();
+    $message->format  = "html";
+    if ($message->message === false) {
       $message->color = "red";
       $their_name = $webhook_post_data->item->message->from->name;
       switch (mt_rand(0, 3)) {
@@ -138,32 +172,56 @@ class WeatherReport {
       }
     } else {
       $message->color = "gray";
-      $message->message = ""
-        . "<b>Weather Report:</b> " . $message->report->location . "<br/>"
-        . "<b>Condition:</b> "
-          . $message->report->condition[1] . ", "
-          . number_format($message->report->condition[0]) . "&deg;"
-          . $message->report->unit_temperature . " "
-        . "<b>Wind Chill:</b> "
-          . number_format($message->report->wind_chill) . "&deg;"
-          . $message->report->unit_temperature . "<br/>"
-        . "<b>Humidity:</b> "
-          . $message->report->humidity . "% "
-        . "<b>Wind:</b> "
-          . ($message->report->wind_speed != 0 ? ""
-          . self::directionString($message->report->wind_direction)
-          . " at " : "")
-          . $message->report->wind_speed
-          . " "
-          . $message->report->unit_speed . "<br/>"
-        . (!empty($message->report->sunrise) &&
-           !empty($message->report->sunset) ? ""
-        . "<b>Sunrise:</b> "
-          . $message->report->sunrise . " "
-        . "<b>Sunset:</b> "
-          . $message->report->sunset . "<br/>" : "")
-      ;
     }
+    return $message;
+  }
+
+  public function getAsObject() {
+    if ($this->location == 666 || strtolower($this->location) == "hell") {
+      $report = $this->standardizeReportHell();
+    } else {
+      $report = $this->downloadReport();
+      $report = $this->standardizeReport($report);
+    }
+    return $report;
+  }
+
+  public function getAsPlain() {
+    if ($this->location == 666 || strtolower($this->location) == "hell") {
+      $report = $this->standardizeReportHell();
+    } else {
+      $report = $this->downloadReport();
+      $report = $this->standardizeReport($report);
+    }
+    if (!$report) {
+      return false;
+    }
+    $deg = mb_convert_encoding(chr(176), 'UTF-8', 'ASCII');
+    $message = ""
+      . "Weather Report: " . $report->location . "\n"
+      . "Condition: "
+        . $report->condition[1] . ", "
+        . number_format($report->condition[0]) . $deg
+        . $report->unit_temperature . " "
+      . "Wind Chill: "
+        . number_format($report->wind_chill) . $deg
+        . $report->unit_temperature . "\n"
+      . "Humidity: "
+        . $report->humidity . "% "
+      . "Wind: "
+        . ($report->wind_speed != 0 ? ""
+        . self::directionString($report->wind_direction, false)
+        . " at " : "")
+        . $report->wind_speed
+        . " "
+        . $report->unit_speed . "\n"
+      . (!empty($report->sunrise) &&
+         !empty($report->sunset) ? ""
+      . "Sunrise: "
+        . $report->sunrise . " "
+      . "Sunset: "
+        . $report->sunset . "\n" : "")
+    ;
     return $message;
   }
 

@@ -4,6 +4,7 @@ namespace CarlBennett\API\Libraries;
 
 use CarlBennett\API\Controllers\HipChat as HipChatController;
 use CarlBennett\API\Controllers\Status as StatusController;
+use CarlBennett\API\Controllers\Weather as WeatherController;
 use CarlBennett\API\Libraries\Common;
 use CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
 use CarlBennett\API\Libraries\Exceptions\ServiceUnavailableException;
@@ -148,6 +149,11 @@ class Router {
       case "status.json":
       case "status.txt":
         $controller = new StatusController();
+      break;
+      case "weather":
+      case "weather.json":
+      case "weather.txt":
+        $controller = new WeatherController();
       break;
       default:
         throw new ControllerNotFoundException($path);
