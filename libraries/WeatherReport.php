@@ -117,12 +117,7 @@ class WeatherReport {
   }
 
   public function getAsHtml() {
-    if ($this->location == 666 || strtolower($this->location) == "hell") {
-      $report = $this->standardizeReportHell();
-    } else {
-      $report = $this->downloadReport();
-      $report = $this->standardizeReport($report);
-    }
+    $report = $this->getAsObject();
     if (!$report) {
       return false;
     }
@@ -187,12 +182,7 @@ class WeatherReport {
   }
 
   public function getAsPlain() {
-    if ($this->location == 666 || strtolower($this->location) == "hell") {
-      $report = $this->standardizeReportHell();
-    } else {
-      $report = $this->downloadReport();
-      $report = $this->standardizeReport($report);
-    }
+    $report = $this->getAsObject();
     if (!$report) {
       return false;
     }
