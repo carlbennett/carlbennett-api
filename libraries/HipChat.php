@@ -78,7 +78,7 @@ class HipChat {
         "It'll be lunchtime in " . Common::intervalToString($diffTime, "a moment") . ".", "text", true);
       return ($response && $response->code == 204);
     }
-    if (preg_match("/^.*ball,.*\?.*/", strtolower($message))) {
+    if (preg_match("/^.*8\s*ball.*\?.*/", strtolower($message))) {
       $magic8ball = (new Magic8Ball())->getPrediction($message);
       $response = $this->sendMessage($room_id, $room_api_token, "gray", $magic8ball);
       return ($response && $response->code == 204);
