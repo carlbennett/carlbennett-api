@@ -18,7 +18,12 @@ class WeatherPlain extends View {
     if (!$model instanceof WeatherModel) {
       throw new IncorrectModelException();
     }
-    echo $model->weather_report->getAsPlain();
+    $string = $model->weather_report->getAsPlain();
+    if ($string === false) {
+      echo "Error: unable to download report or location not given.\n";
+    } else {
+      echo $string;
+    }
   }
 
 }

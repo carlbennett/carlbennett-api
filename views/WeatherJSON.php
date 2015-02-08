@@ -18,7 +18,9 @@ class WeatherJSON extends View {
     if (!$model instanceof WeatherModel) {
       throw new IncorrectModelException();
     }
-    $flags = (Common::isBrowser(getenv("HTTP_USER_AGENT")) ? JSON_PRETTY_PRINT : 0);
+    $flags = (Common::isBrowser(getenv("HTTP_USER_AGENT")) ?
+      JSON_PRETTY_PRINT : 0
+    );
     echo json_encode($model->weather_report->getAsObject(), $flags);
   }
 

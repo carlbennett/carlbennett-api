@@ -34,7 +34,11 @@ class Weather extends Controller {
     }
     ob_start();
     $view->render($model);
-    $router->setResponseCode(200);
+    if (!isset($query["location"])) {
+      $router->setResponseCode(400);
+    } else {
+      $router->setResponseCode(200);
+    }
     $router->setResponseHeader("Cache-Control", "max-age=300");
     $router->setResponseHeader("Content-Type", $view->getMimeType());
     $router->setResponseHeader("Expires", (new \DateTime("+300 second"))->setTimezone(new \DateTimeZone("GMT"))->format("D, j M Y H:i:s e"));
