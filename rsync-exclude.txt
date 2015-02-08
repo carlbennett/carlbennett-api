@@ -1,5 +1,6 @@
 .git/
 .gitignore
+LICENSE
 README.md
 deploy.sh
 rsync-exclude.txt
