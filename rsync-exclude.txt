@@ -1,5 +1,6 @@
 .git/
 .gitignore
-deploy.sh
 README.md
+deploy.sh
+rsync-exclude.txt
 settings.sample.json
