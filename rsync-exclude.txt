@@ -1,5 +1,7 @@
 .git/
 .gitignore
+*.log
+*.swp
 LICENSE
 README.md
 deploy.sh
