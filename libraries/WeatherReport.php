@@ -13,7 +13,7 @@ class WeatherReport {
   }
 
   public static function directionString($degree, $html) {
-    $deg = ($html ? "&deg;" : mb_convert_encoding(chr(176), 'UTF-8', 'ASCII'));
+    $deg = ($html ? "&deg;" : mb_convert_encoding(chr(176), "UTF-8", "ASCII"));
     $degree %= 360;
     if ($degree >= 0   && $degree < 45 ) return "N";
     if ($degree >= 45  && $degree < 90 ) return "NE";
@@ -186,7 +186,7 @@ class WeatherReport {
     if (!$report) {
       return false;
     }
-    $deg = mb_convert_encoding(chr(176), 'UTF-8', 'ASCII');
+    $deg = mb_convert_encoding(chr(176), "UTF-8", "ASCII");
     $message = ""
       . "Weather Report: " . $report->location . "\n"
       . "Condition: "
