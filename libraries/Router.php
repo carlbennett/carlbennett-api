@@ -101,8 +101,12 @@ class Router {
     return pathinfo($this->pathString, PATHINFO_EXTENSION);
   }
 
-  public function getRequestPathString() {
-    return $this->pathString;
+  public function getRequestPathString($with_extension = true) {
+    if ($with_extension) {
+      return $this->pathString;
+    } else {
+      return pathinfo($this->pathString, PATHINFO_FILENAME);
+    }
   }
 
   public function getRequestBodyArray() {
@@ -135,7 +139,8 @@ class Router {
   public function route() {
     $path = $this->getRequestPathArray()[1];
     if (extension_loaded("newrelic")) {
-      newrelic_name_transaction("/" . $path);
+      $newrelic_name_transaction = "/" . $this->getRequestPathString(false);
+      newrelic_name_transaction($newrelic_name_transaction);
     }
     if (Common::$settings->Router->maintenance) {
       throw new ServiceUnavailableException();
