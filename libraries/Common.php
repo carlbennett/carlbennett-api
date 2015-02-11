@@ -4,6 +4,7 @@ namespace CarlBennett\API\Libraries;
 
 final class Common {
 
+  public static $cache;
   public static $settings;
 
   private function __contruct() {} // Deny attempts to instantiate.

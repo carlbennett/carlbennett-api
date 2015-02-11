@@ -2,6 +2,7 @@
 
 use CarlBennett\API\Libraries\Exceptions\APIException;
 use CarlBennett\API\Libraries\Exceptions\ExtensionMissingException;
+use CarlBennett\API\Libraries\Cache;
 use CarlBennett\API\Libraries\Common;
 use CarlBennett\API\Libraries\Router;
 
@@ -99,6 +100,7 @@ function main() {
   }
 
   Common::$settings = json_decode(file_get_contents("./settings.json"));
+  Common::$cache    = new Cache();
 
   $router = new Router();
   $router->route();

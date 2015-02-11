@@ -8,6 +8,14 @@
       }
     ]
   },
+  "Memcache": {
+    "servers": [
+      {
+        "hostname": "localhost",
+        "port": 11211
+      }
+    ]
+  },
   "MySQL": {
     "character_set": "utf8",
     "collate": "utf8_unicode_ci",
