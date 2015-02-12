@@ -49,7 +49,7 @@ class WeatherReport {
       // Not expected JSON mime-type
       return $response->type;
     }
-    Common::$cache->set($cache_key, serialize($response), 300);
+    Common::$cache->set($cache_key, serialize($response), 600);
     return json_decode($response->data);
   }
 
