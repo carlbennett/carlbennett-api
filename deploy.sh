@@ -5,7 +5,7 @@ printf "== Configuring environment =============================================
 DEPLOY_SOURCE_PATH=$(git rev-parse --show-toplevel)
 DEPLOY_TARGET_HOST="carlbennett.me"
 DEPLOY_TARGET_USER="carl"
-DEPLOY_TARGET_PATH="/home/nginx/carlbennett-www"
+DEPLOY_TARGET_PATH="/home/nginx/carlbennett-api"
 
 printf "DEPLOY_SOURCE_PATH = ${DEPLOY_SOURCE_PATH}\n"
 printf "DEPLOY_TARGET_HOST = ${DEPLOY_TARGET_HOST}\n"
