@@ -37,7 +37,7 @@ CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
 printf "== Changing permissions on target =============================================\n"
 ssh "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}" \
-  sudo chown nginx:www-data -Rv "$DEPLOY_TARGET_PATH" | \
+  sudo chown nginx:webusers -Rv "$DEPLOY_TARGET_PATH" | \
   grep -v "^ownership of .* retained as .*$"
 CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
