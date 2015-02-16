@@ -28,8 +28,8 @@ CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
 rsync --rsync-path="sudo rsync" -Oprtvz --delete \
   --exclude-from="rsync-exclude.txt" \
-  "$DEPLOY_SOURCE_PATH" \
-  "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}:${DEPLOY_TARGET_PATH}"
+  "${DEPLOY_SOURCE_PATH}/" \
+  "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}:${DEPLOY_TARGET_PATH}/"
 CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
 cd "$CUR_DIR"
