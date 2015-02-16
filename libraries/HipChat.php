@@ -60,13 +60,6 @@ class HipChat {
       $response = $this->sendMessage($room_id, $room_api_token, "gray", substr($message, 6), "text", true);
       return ($response && $response->code == 204);
     }
-    $colors = new ColorNames();
-    if ($color = $colors->colorMatchName($message)) {
-      $response = $this->sendMessage($room_id, $room_api_token, "gray",
-        "#" . $color->hex,
-        "text", true);
-      return ($response && $response->code == 204);
-    }
     if (preg_match("/^.*is\s*it\s*lunch\s*time\s*yet.*$/", strtolower($message))) {
       $currentTime  = new \DateTime("now", new \DateTimeZone("America/Chicago"));
       $lunchtime    = new \DateTime("12PM", new \DateTimeZone("America/Chicago"));
@@ -86,6 +79,13 @@ class HipChat {
     if (preg_match("/^(@|\/)google\s+(.*)$/", strtolower($message), $matches)) {
       $response = $this->sendMessage($room_id, $room_api_token, "gray",
         "https://www.google.com/search?q=" . urlencode($matches[2]), "text", true);
+      return ($response && $response->code == 204);
+    }
+    $colors = new ColorNames();
+    if ($color = $colors->colorMatchName($message)) {
+      $response = $this->sendMessage($room_id, $room_api_token, "gray",
+        "#" . $color->hex,
+        "text", true);
       return ($response && $response->code == 204);
     }
     if (strtolower($trimmed_message) == "ping") {
