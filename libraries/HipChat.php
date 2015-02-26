@@ -81,6 +81,11 @@ class HipChat {
         "https://www.google.com/search?q=" . urlencode($matches[2]), "text", true);
       return ($response && $response->code == 204);
     }
+    if (preg_match("/^(@|\/)lmgtfy\s+(.*)$/", strtolower($message), $matches)) {
+      $response = $this->sendMessage($room_id, $room_api_token, "gray",
+        "http://lmgtfy.com/?q=" . urlencode($matches[2]), "text", true);
+      return ($response && $response->code == 204);
+    }
     $colors = new ColorNames();
     if ($color = $colors->colorMatchName($message)) {
       $response = $this->sendMessage($room_id, $room_api_token, "gray",
