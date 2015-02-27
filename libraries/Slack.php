@@ -10,7 +10,7 @@ class Slack {
     $token        = $webhook_post_data->token;
     $team_id      = $webhook_post_data->team_id;
     $channel_id   = $webhook_post_data->channel_id;
-    $channel_name = $webhook_post_date->channel_name;
+    $channel_name = $webhook_post_data->channel_name;
     $user_id      = $webhook_post_data->user_id;
     $user_name    = $webhook_post_data->user_name;
     $command      = $webhook_post_data->command;
