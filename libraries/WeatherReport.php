@@ -155,6 +155,40 @@ class WeatherReport {
     return $message;
   }
 
+  public function getAsMarkdown() {
+    $report = $this->getAsObject();
+    if (!$report) {
+      return false;
+    }
+    $deg = mb_convert_encoding(chr(176), "UTF-8", "ASCII");
+    $message = ""
+      . "*Weather Report:* " . $report->location . "\n"
+      . "*Condition:* "
+        . $report->condition[1] . ", "
+        . number_format($report->condition[0]) . $deg
+        . $report->unit_temperature . " "
+      . "*Wind Chill:* "
+        . number_format($report->wind_chill) . $deg
+        . $report->unit_temperature . "\n"
+      . "*Humidity:* "
+        . $report->humidity . "% "
+      . "*Wind:* "
+        . ($report->wind_speed != 0 ? ""
+        . self::directionString($report->wind_direction, true)
+        . " at " : "")
+        . $report->wind_speed
+        . " "
+        . $report->unit_speed . "\n"
+      . (!empty($report->sunrise) &&
+         !empty($report->sunset) ? ""
+      . "*Sunrise:* "
+        . $report->sunrise . " "
+      . "*Sunset:* "
+        . $report->sunset . "\n" : "")
+    ;
+    return $message;
+  }
+
   public function getAsMessage(&$webhook_post_data) {
     $message          = new \StdClass();
     $message->message = $this->getAsHtml();

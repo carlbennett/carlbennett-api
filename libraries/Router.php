@@ -3,6 +3,7 @@
 namespace CarlBennett\API\Libraries;
 
 use CarlBennett\API\Controllers\HipChat as HipChatController;
+use CarlBennett\API\Controllers\Slack as SlackController;
 use CarlBennett\API\Controllers\Status as StatusController;
 use CarlBennett\API\Controllers\Weather as WeatherController;
 use CarlBennett\API\Libraries\Common;
@@ -149,6 +150,9 @@ class Router {
     switch ($path) {
       case "hipchat":
         $controller = new HipChatController();
+      break;
+      case "slack":
+        $controller = new SlackController();
       break;
       case "status":
       case "status.json":
