@@ -7,7 +7,6 @@ use CarlBennett\API\Libraries\Exceptions\UnspecifiedViewException;
 use CarlBennett\API\Libraries\Router;
 
 use CarlBennett\API\Models\Slack as SlackModel;
-use CarlBennett\API\Views\SlackHtml as SlackHtmlView;
 use CarlBennett\API\Views\SlackMarkdown as SlackMarkdownView;
 
 class Slack extends Controller {
@@ -28,10 +27,6 @@ class Slack extends Controller {
     }
     switch ($router->getRequestPathExtension()) {
       case "":
-      case "htm":
-      case "html":
-        $view = new SlackHtmlView();
-      break;
       case "md":
         $view = new SlackMarkdownView();
       break;
