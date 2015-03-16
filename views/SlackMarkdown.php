@@ -4,6 +4,7 @@ namespace CarlBennett\API\Views;
 
 use CarlBennett\API\Libraries\Common;
 use CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
+use CarlBennett\API\Libraries\Exceptions\UnhandledInternalResponseException;
 use CarlBennett\API\Libraries\Model;
 use CarlBennett\API\Libraries\View;
 use CarlBennett\API\Libraries\WeatherReport;
@@ -19,10 +20,12 @@ class SlackMarkdown extends View {
     if (!$model instanceof SlackModel) {
       throw new IncorrectModelException();
     }
-    if (!$model->result[0]) {
-      echo $model->result[1];
-    } else if ($model->result[1] instanceof WeatherReport) {
-      echo $model->result[1]->getAsMarkdown();
+    if (is_string($model->result)) {
+      echo $model->result;
+    } else if ($model->result instanceof WeatherReport) {
+      echo $model->result->getAsMarkdown();
+    } else {
+      throw new UnhandledInternalResponseException();
     }
   }
 
