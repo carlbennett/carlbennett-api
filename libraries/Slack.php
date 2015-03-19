@@ -27,20 +27,12 @@ class Slack {
       newrelic_add_custom_parameter("text", $text);
     }
 
-    $f = fopen("./slack-webhook.log", "w");
-    fwrite($f, json_encode($webhook_post_data, JSON_PRETTY_PRINT));
-    fclose($f);
-
     $response = null;
     switch ($command) {
-      case "/lunch": {
-        $response = "Not Yet Implemented.";
-        break;
-      }
       case "/weather": {
         $location = trim($text);
         $info     = new WeatherReport($location);
-        $response = [true, $info];
+        $response = $info;
         break;
       }
       default: {
