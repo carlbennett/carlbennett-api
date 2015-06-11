@@ -4,6 +4,6 @@
 *.swp
 LICENSE
 README.md
-deploy.sh
+rsync-deploy.sh
 rsync-exclude.txt
 settings.sample.json
