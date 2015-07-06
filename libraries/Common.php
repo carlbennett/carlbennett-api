@@ -110,6 +110,14 @@ final class Common {
     }
   }
 
+  public static function shellSafeExecute($command, $args) {
+    return shell_exec($command . " " . escapeshellcmd($args));
+  }
+
+  public static function stripExcessLines($buffer) {
+    return preg_replace("/\n\n+/", "\n\n", $buffer);
+  }
+
   public static function stripLeftPattern($haystack, $needle) {
     $needle_l = strlen($needle);
     if (substr($haystack, 0, $needle_l) == $needle) {

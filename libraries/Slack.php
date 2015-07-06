@@ -29,20 +29,10 @@ class Slack {
 
     $response = null;
     switch ($command) {
-      case "/dig": {
-        $response = "```"
-          . preg_replace("/\n\n+/", "\n\n",
-              shell_exec("dig " . escapeshellcmd($text))
-            )
-          . "```";
-        break;
-      }
+      case "/dig":
       case "/nslookup": {
-        $response = "```"
-          . preg_replace("/\n\n+/", "\n\n",
-              shell_exec("nslookup " . escapeshellcmd($text))
-            )
-          . "```";
+        $output   = Common::shellSafeExecute(substr($command, 1), $text);
+        $response = "```" . Common::stripExcessLines($output) . "```";
         break;
       }
       case "/weather": {
