@@ -29,6 +29,19 @@ class Slack {
 
     $response = null;
     switch ($command) {
+      case "/8ball":
+      case "/magic8ball": {
+        $question = trim($text);
+        if (strpos($question, "\n") !== false) {
+          $response = "Only one-line sentences please!";
+        } else if (substr(trim($question), -1) != "?") {
+          $response = "Please ask me a question.";
+        } else {
+          $response = "> " . $question . "\n"
+            . (new Magic8Ball())->getPrediction($question);
+        }
+        break;
+      }
       case "/dig":
       case "/host":
       case "/nslookup": {
