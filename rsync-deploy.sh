@@ -4,7 +4,7 @@ printf "========================================================================
 printf "== Configuring environment ====================================================\n"
 DEPLOY_SOURCE_PATH=$(git rev-parse --show-toplevel)
 DEPLOY_TARGET_HOST="fc22.aws.carlbennett.me"
-DEPLOY_TARGET_USER="carl"
+DEPLOY_TARGET_USER="cbennett"
 DEPLOY_TARGET_PATH="/home/nginx/carlbennett-api"
 
 printf "DEPLOY_SOURCE_PATH = ${DEPLOY_SOURCE_PATH}\n"
@@ -37,7 +37,7 @@ CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
 printf "== Changing permissions on target =============================================\n"
 ssh "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}" \
-  sudo chown nginx:webusers -Rv "$DEPLOY_TARGET_PATH" | \
+  sudo chown nginx:www-data -Rv "$DEPLOY_TARGET_PATH" | \
   grep -v "^ownership of .* retained as .*$"
 CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
 
