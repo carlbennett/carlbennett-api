@@ -49,6 +49,30 @@ class Slack {
         $response = "```" . Common::stripExcessLines($output) . "```";
         break;
       }
+      case "/geoip": {
+        $ip = trim($text);
+        if (empty($ip)) {
+          $response = "Error: Please provide an IP address or hostname.";
+        } else {
+          $geoinfo  = \geoip_record_by_name($ip);
+          $response = "query_address " . $ip . "\n";
+          if ($geoinfo) {
+            ksort($geoinfo);
+            foreach ($geoinfo as $key => $val) {
+              if (!empty($val))
+                $response .= "geoinfo_" . $key . " " . $val . "\n";
+            }
+          } else if (is_bool($geoinfo)) {
+            $response .= "geoinfo " . ($geoinfo ? "true" : "false") . "\n";
+          } else if (is_null($geoinfo)) {
+            $response .= "geoinfo null\n";
+          } else {
+            $response .= "geoinfo " . gettype($geoinfo) . "\n";
+          }
+          $response = "```" . $response . "```";
+        }
+        break;
+      }
       case "/weather": {
         $location = trim($text);
         $info     = new WeatherReport($location);
