@@ -30,7 +30,7 @@ class Slack {
     $response = null;
     switch ($command) {
       case "/dig": {
-        $response = "```\n"
+        $response = "```"
           . preg_replace("/\n\n+/", "\n\n",
               shell_exec("dig " . escapeshellcmd($text))
             )
@@ -38,7 +38,7 @@ class Slack {
         break;
       }
       case "/nslookup": {
-        $response = "```\n"
+        $response = "```"
           . preg_replace("/\n\n+/", "\n\n",
               shell_exec("nslookup " . escapeshellcmd($text))
             )
