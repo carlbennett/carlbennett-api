@@ -29,6 +29,22 @@ class Slack {
 
     $response = null;
     switch ($command) {
+      case "/dig": {
+        $response = "```\n"
+          . preg_replace("/\n\n+/", "\n\n",
+              shell_exec("dig " . escapeshellcmd($text))
+            )
+          . "```";
+        break;
+      }
+      case "/nslookup": {
+        $response = "```\n"
+          . preg_replace("/\n\n+/", "\n\n",
+              shell_exec("nslookup " . escapeshellcmd($text))
+            )
+          . "```";
+        break;
+      }
       case "/weather": {
         $location = trim($text);
         $info     = new WeatherReport($location);
