@@ -30,6 +30,7 @@ class Slack {
     $response = null;
     switch ($command) {
       case "/dig":
+      case "/host":
       case "/nslookup": {
         $output   = Common::shellSafeExecute(substr($command, 1), $text);
         $response = "```" . Common::stripExcessLines($output) . "```";
