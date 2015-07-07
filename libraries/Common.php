@@ -111,7 +111,7 @@ final class Common {
   }
 
   public static function shellSafeExecute($command, $args) {
-    return shell_exec($command . " " . escapeshellcmd($args));
+    return shell_exec($command . " " . escapeshellcmd($args) . " 2>&1");
   }
 
   public static function stripExcessLines($buffer) {
