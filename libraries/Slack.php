@@ -45,8 +45,12 @@ class Slack {
       case "/dig":
       case "/host":
       case "/nslookup": {
-        $output   = Common::shellSafeExecute(substr($command, 1), $text);
-        $response = "```" . Common::stripExcessLines($output) . "```";
+        $output = Common::shellSafeExecute(substr($command, 1), $text);
+        if (empty($output)) {
+          $response = "No output from the command-line program.";
+        } else {
+          $response = "```" . Common::stripExcessLines($output) . "```";
+        }
         break;
       }
       case "/geoip": {
