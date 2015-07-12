@@ -28,5 +28,14 @@
   "Router": {
     "maintenance": true,
     "map": []
+  },
+  "Slack": {
+    "tokens": [
+      {
+        "team": "abc",
+        "user": "xyz",
+        "token": "abcxyz"
+      }
+    ]
   }
 }
