@@ -8,6 +8,7 @@
 1. Clone the repository into a directory accessible by your web server, such as: ```/home/nginx/carlbennett-api/```
 2. Ensure PHP is available to your web server. The following packages are required by this project:
  - [json](https://php.net/manual/book.json.php) _(comes bundled with PHP >= 5.2.0)_
+ - [mbstring](https://php.net/manual/book.mbstring.php)
  - [pecl_geoip](https://php.net/manual/book.geoip.php)
  - [pecl_http](https://php.net/manual/http.install.php)
  - [newrelic](https://docs.newrelic.com/docs/agents/php-agent/getting-started/new-relic-php) _(optional)_
