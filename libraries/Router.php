@@ -10,6 +10,7 @@ use \CarlBennett\API\Controllers\Status as StatusController;
 use \CarlBennett\API\Controllers\Weather as WeatherController;
 use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
+use \CarlBennett\API\Libraries\Logger;
 use \DateTime;
 use \DateTimeZone;
 use \SplObjectStorage;
@@ -143,7 +144,7 @@ class Router {
     return $this->requestURI;
   }
 
-  public function route() {
+  public function route(Pair &$redirect = null) {
     $pathArray = $this->getRequestPathArray();
     $path      = (isset($pathArray[1]) ? $pathArray[1] : null);
     $subpath   = (isset($pathArray[2]) ? $pathArray[2] : null);
