@@ -37,8 +37,8 @@ class WeatherReport {
     $C7 = 0.00122874;
     $C8 = 0.00085282;
     $C9 = -0.00000199;
-    $T  = ((int)$temperature);
-    $R  = ((int)$humidity);
+    $T  = ((float)$temperature);
+    $R  = ((float)$humidity);
     $HI = $C1
         + $C2 * $T
         + $C3 * $R
