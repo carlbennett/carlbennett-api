@@ -19,7 +19,6 @@ class Slack {
     $command      = $webhook_post_data->command;
     $text         = $webhook_post_data->text;
 
-    Logger::logMetric("token", $token);    
     Logger::logMetric("token", $token);
     Logger::logMetric("team_id", $team_id);
     Logger::logMetric("channel_id", $channel_id);
