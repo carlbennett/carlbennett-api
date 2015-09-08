@@ -2,7 +2,7 @@
 ## Preface
 - Designed to use the common MVC (Controller, Model, View) paradigm without the use of a PHP framework.
 - Provides an API layer for Carl Bennett's website.
-- Implements external services such as HipChat webhooks and weather reporting.
+- Implements external services such as HipChat, Slack, and Yahoo! Weather.
 
 ## Installation
 1. Clone the repository into a directory accessible by your web server, such as: ```/home/nginx/carlbennett-api/```
