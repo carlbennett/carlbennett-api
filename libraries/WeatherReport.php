@@ -26,6 +26,32 @@ class WeatherReport {
     return "Unknown (" . (int)$degree . $deg . ")";
   }
 
+  public function calculateHeatIndex($temperature, $humidity) {
+    // <https://en.wikipedia.org/wiki/Heat_index#Formula>
+    $C1 = -42.379;
+    $C2 = 2.04901523;
+    $C3 = 10.14333127;
+    $C4 = -0.22475541;
+    $C5 = -0.00683783;
+    $C6 = -0.05481717;
+    $C7 = 0.00122874;
+    $C8 = 0.00085282;
+    $C9 = -0.00000199;
+    $T  = ((int)$temperature);
+    $R  = ((int)$humidity);
+    $HI = $C1
+        + $C2 * $T
+        + $C3 * $R
+        + $C4 * $T * $R
+        + $C5 * $T * $T
+        + $C6 * $R * $R
+        + $C7 * $T * $T * $R
+        + $C8 * $T * $R * $R
+        + $C9 * $T * $T * $R * $R
+    ;
+    return ($T < 80 || $R < 40 ? null : $HI);
+  }
+
   public function downloadReport() {
     $query = "select * from weather.forecast "
       . "where woeid in (select woeid from geo.places(1) where text=\""
@@ -72,6 +98,7 @@ class WeatherReport {
     $report->wind_speed       = $subreport->wind->speed;
     $report->wind_direction   = $subreport->wind->direction;
     $report->humidity         = $subreport->atmosphere->humidity;
+    $report->heat_index       = null; // We calculate this at the end.
     $report->sunrise          = $subreport->astronomy->sunrise;
     $report->sunset           = $subreport->astronomy->sunset;
 
@@ -91,10 +118,19 @@ class WeatherReport {
 
     // clean up the object a bit
     $report->condition[0]   = (int)str_replace(",", "", $report->condition[0]);
-    $report->wind_chill     = (int)$report->wind_chill;
+    $report->wind_chill     = (
+                                $report->condition[0] > 50 ? null :
+                                (int)$report->wind_chill
+                              );
     $report->wind_speed     = (int)$report->wind_speed;
     $report->wind_direction = (int)$report->wind_direction;
     $report->humidity       = (int)$report->humidity;
+
+    // report the heat index (not provided in the $subreport)
+    $report->heat_index     = $this->calculateHeatIndex(
+                                $report->condition[0],
+                                $report->humidity
+                              );
 
     return $report;
   }
@@ -109,11 +145,15 @@ class WeatherReport {
     $report->region           = "Hell";
     $report->unit_temperature = "F";
     $report->unit_speed       = "mph";
-    $report->condition        = [10000000000, "Blistering Hot"];
-    $report->wind_chill       = $report->condition[0];
+    $report->condition        = [mt_rand(1000000, 10000000), "Blistering Hot"];
+    $report->wind_chill       = null;
     $report->wind_speed       = mt_rand(0, 5);
     $report->wind_direction   = mt_rand(0, 359);
-    $report->humidity         = mt_rand(90, 100);
+    $report->humidity         = mt_rand(0, 100);
+    $report->heat_index       = $this->calculateHeatIndex(
+                                  $report->condition[0],
+                                  $report->humidity
+                                );
     $report->sunrise          = null;
     $report->sunset           = null;
 
@@ -133,9 +173,17 @@ class WeatherReport {
         . $report->condition[1] . ", "
         . number_format($report->condition[0]) . "&deg;"
         . $report->unit_temperature . " "
-      . "<b>Wind Chill:</b> "
+      . (!is_null($report->wind_chill) ?
+        "<b>Wind Chill:</b> "
         . number_format($report->wind_chill) . "&deg;"
-        . $report->unit_temperature . "<br/>"
+        . $report->unit_temperature : "")
+      . (!is_null($report->heat_index) ?
+        "<b>Heat Index:</b> "
+        . number_format($report->heat_index) . "&deg;"
+        . $report->unit_temperature : "")
+      . (!is_null($report->wind_chill) ||
+         !is_null($report->heat_index) ?
+         "<br/>" : "")
       . "<b>Humidity:</b> "
         . $report->humidity . "% "
       . "<b>Wind:</b> "
@@ -167,9 +215,17 @@ class WeatherReport {
         . $report->condition[1] . ", "
         . number_format($report->condition[0]) . $deg
         . $report->unit_temperature . " "
-      . "*Wind Chill:* "
+      . (!is_null($report->wind_chill) ?
+        "*Wind Chill:* "
         . number_format($report->wind_chill) . $deg
-        . $report->unit_temperature . "\n"
+        . $report->unit_temperature : "")
+      . (!is_null($report->heat_index) ?
+        "*Heat Index:* "
+        . number_format($report->heat_index) . $deg
+        . $report->unit_temperature : "")
+      . (!is_null($report->wind_chill) ||
+         !is_null($report->heat_index) ?
+         "\n" : "")
       . "*Humidity:* "
         . $report->humidity . "% "
       . "*Wind:* "
@@ -233,9 +289,17 @@ class WeatherReport {
         . $report->condition[1] . ", "
         . number_format($report->condition[0]) . $deg
         . $report->unit_temperature . " "
-      . "Wind Chill: "
+      . (!is_null($report->wind_chill) ?
+        "Wind Chill: "
         . number_format($report->wind_chill) . $deg
-        . $report->unit_temperature . "\n"
+        . $report->unit_temperature : "")
+      . (!is_null($report->heat_index) ?
+        "Heat Index: "
+        . number_format($report->heat_index) . $deg
+        . $report->unit_temperature : "")
+      . (!is_null($report->wind_chill) ||
+         !is_null($report->heat_index) ?
+         "\n" : "")
       . "Humidity: "
         . $report->humidity . "% "
       . "Wind: "
