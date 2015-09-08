@@ -14,8 +14,7 @@ class Webhook extends Controller {
 
   public function run(Router &$router) {
     switch ($router->getRequestPathExtension()) {
-      case "":
-      case "json":
+      case "json": "":
         $view = new HipChatWebhookJSONView();
       break;
       default:
