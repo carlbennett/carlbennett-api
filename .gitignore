@@ -19,6 +19,6 @@
 .Spotlight-V100
 .Trashes
 ._*
-/logs/
 /config.json
+/logs/
 Thumbs.db

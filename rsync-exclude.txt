@@ -24,8 +24,8 @@
 .gitkeep
 /.travis.yml
 /README.md
+/config.sample.json
 /libraries/Exceptions/Reference.md
 /rsync-deploy.sh
 /rsync-exclude.txt
-/config.sample.json
 Thumbs.db
