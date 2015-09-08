@@ -16,13 +16,11 @@ class Status extends Controller {
 
   public function run(Router &$router) {
     switch ($router->getRequestPathExtension()) {
-      case "txt":
-      case "text":
-        $view = new StatusPlainView();
-        break;
-      case "":
-      case "json":
+      case "json": case "":
         $view = new StatusJSONView();
+      break;
+      case "txt":
+        $view = new StatusPlainView();
       break;
       default:
         throw new UnspecifiedViewException();

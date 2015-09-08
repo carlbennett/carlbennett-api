@@ -14,13 +14,11 @@ class Weather extends Controller {
 
   public function run(Router &$router) {
     switch ($router->getRequestPathExtension()) {
-      case "txt":
-      case "text":
-        $view = new WeatherPlainView();
-        break;
-      case "":
-      case "json":
+      case "json": case "":
         $view = new WeatherJSONView();
+      break;
+      case "txt":
+        $view = new WeatherPlainView();
       break;
       default:
         throw new UnspecifiedViewException();

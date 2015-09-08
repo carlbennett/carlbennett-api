@@ -14,15 +14,14 @@ class Maintenance extends Controller {
 
   public function run(Router &$router) {
     switch ($router->getRequestPathExtension()) {
-      case "":
-      case "txt":
-        $view = new MaintenancePlainView();
-      break;
       case "json":
         $view = new MaintenanceJSONView();
       break;
       case "md":
         $view = new MaintenanceMarkdownView();
+      break;
+      case "txt": case "":
+        $view = new MaintenancePlainView();
       break;
       default:
         throw new UnspecifiedViewException();
