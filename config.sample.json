@@ -9,6 +9,8 @@
     ]
   },
   "Memcache": {
+    "connect_timeout": 1.0,
+    "tcp_nodelay": true,
     "servers": [
       {
         "hostname": "localhost",

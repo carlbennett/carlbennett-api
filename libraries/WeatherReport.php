@@ -2,7 +2,7 @@
 
 namespace CarlBennett\API\Libraries;
 
-use CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Common;
 
 class WeatherReport {
 

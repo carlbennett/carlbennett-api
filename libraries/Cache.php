@@ -2,7 +2,8 @@
 
 namespace CarlBennett\API\Libraries;
 
-use CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Common;
+use \Memcached;
 
 class Cache {
 
@@ -11,8 +12,15 @@ class Cache {
   protected $memcache;
 
   public function __construct() {
-    $this->memcache = new \Memcached();
-    foreach (Common::$settings->Memcache->servers as $server) {
+    $this->memcache = new Memcached();
+    $this->memcache->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+    $this->memcache->setOption(Memcached::OPT_TCP_NODELAY,
+      Common::$config->Memcache->tcp_nodelay
+    );
+    $this->memcache->setOption(Memcached::OPT_CONNECT_TIMEOUT,
+      Common::$config->Memcache->connect_timeout * 1000
+    );
+    foreach (Common::$config->Memcache->servers as $server) {
       $this->memcache->addServer($server->hostname, $server->port);
     }
   }

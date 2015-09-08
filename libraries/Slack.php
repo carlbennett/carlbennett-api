@@ -2,7 +2,10 @@
 
 namespace CarlBennett\API\Libraries;
 
-use CarlBennett\API\Libraries\WeatherReport;
+use \CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Logger;
+use \CarlBennett\API\Libraries\Magic8Ball;
+use \CarlBennett\API\Libraries\WeatherReport;
 
 class Slack {
 
@@ -15,17 +18,16 @@ class Slack {
     $user_name    = $webhook_post_data->user_name;
     $command      = $webhook_post_data->command;
     $text         = $webhook_post_data->text;
-    
-    if (extension_loaded("newrelic")) {
-      newrelic_add_custom_parameter("token", $token);
-      newrelic_add_custom_parameter("team_id", $team_id);
-      newrelic_add_custom_parameter("channel_id", $channel_id);
-      newrelic_add_custom_parameter("channel_name", $channel_name);
-      newrelic_add_custom_parameter("user_id", $user_id);
-      newrelic_add_custom_parameter("user_name", $user_name);
-      newrelic_add_custom_parameter("command", $command);
-      newrelic_add_custom_parameter("text", $text);
-    }
+
+    Logger::logMetric("token", $token);    
+    Logger::logMetric("token", $token);
+    Logger::logMetric("team_id", $team_id);
+    Logger::logMetric("channel_id", $channel_id);
+    Logger::logMetric("channel_name", $channel_name);
+    Logger::logMetric("user_id", $user_id);
+    Logger::logMetric("user_name", $user_name);
+    Logger::logMetric("command", $command);
+    Logger::logMetric("text", $text);
 
     $response = null;
     switch ($command) {

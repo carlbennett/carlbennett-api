@@ -6,25 +6,22 @@ use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
 use \CarlBennett\API\Libraries\Model;
 use \CarlBennett\API\Libraries\View;
-use \CarlBennett\API\Models\Status as StatusModel;
+use \CarlBennett\API\Models\Maintenance as MaintenanceModel;
 
-class StatusJSON extends View {
+class MaintenanceJSON extends View {
 
   public function getMimeType() {
     return "application/json;charset=utf-8";
   }
 
   public function render(Model &$model) {
-    if (!$model instanceof StatusModel) {
+    if (!$model instanceof MaintenanceModel) {
       throw new IncorrectModelException();
     }
     $flags = (Common::isBrowser(getenv("HTTP_USER_AGENT")) ? JSON_PRETTY_PRINT : 0);
-    echo json_encode([
-      "remote_address" => $model->remote_address,
-      "remote_geoinfo" => $model->remote_geoinfo,
-      "timestamp"      => $model->timestamp->format($model->timestamp_format),
-      "version_info"   => $model->version_info,
-    ], $flags);
+    echo json_encode(
+      "Carl Bennett's API is temporarily offline, check back later."
+    , $flags);
   }
 
 }

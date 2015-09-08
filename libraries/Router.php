@@ -2,13 +2,18 @@
 
 namespace CarlBennett\API\Libraries;
 
-use CarlBennett\API\Controllers\HipChat as HipChatController;
-use CarlBennett\API\Controllers\Slack as SlackController;
-use CarlBennett\API\Controllers\Status as StatusController;
-use CarlBennett\API\Controllers\Weather as WeatherController;
-use CarlBennett\API\Libraries\Common;
-use CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
-use CarlBennett\API\Libraries\Exceptions\ServiceUnavailableException;
+use \CarlBennett\API\Controllers\HipChat\Webhook as HipChatWebhookController;
+use \CarlBennett\API\Controllers\Maintenance as MaintenanceController;
+use \CarlBennett\API\Controllers\Redirect as RedirectController;
+use \CarlBennett\API\Controllers\Slack\Webhook as SlackWebhookController;
+use \CarlBennett\API\Controllers\Status as StatusController;
+use \CarlBennett\API\Controllers\Weather as WeatherController;
+use \CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
+use \DateTime;
+use \DateTimeZone;
+use \SplObjectStorage;
+use \UnexpectedValueException;
 
 class Router {
 
@@ -47,7 +52,7 @@ class Router {
     $this->requestBodyString = $this->_getRequestBodyString();
     $this->requestBodyArray = $this->_getRequestBodyArray();
     $this->responseCode = 500;
-    $this->responseHeaders = new \SplObjectStorage();
+    $this->responseHeaders = new SplObjectStorage();
     $this->responseContent = "";
   }
 
@@ -61,9 +66,10 @@ class Router {
     } else {
       $len = (int)$len;
       $i = 0;
+      $chunk_size = 8192; // default is 8192 according to PHP documentation
       $stdin = fopen("php://input", "r");
       while (!feof($stdin) && $i < $len) {
-        $buffer .= fread($stdin, 8192); // 8291 is the default according to PHP documentation
+        $buffer .= fread($stdin, $chunk_size);
       }
       fclose($stdin);
     }
@@ -138,40 +144,61 @@ class Router {
   }
 
   public function route() {
-    $path = $this->getRequestPathArray()[1];
-    if (extension_loaded("newrelic")) {
-      $newrelic_name_transaction = "/" . $this->getRequestPathString(false);
-      newrelic_name_transaction($newrelic_name_transaction);
-    }
-    if (Common::$settings->Router->maintenance) {
-      throw new ServiceUnavailableException();
-    }
+    $pathArray = $this->getRequestPathArray();
+    $path      = (isset($pathArray[1]) ? $pathArray[1] : null);
+    $subpath   = (isset($pathArray[2]) ? $pathArray[2] : null);
+    Logger::setTransactionName($this->getRequestPathString(false));
+    
     ob_start();
-    switch ($path) {
-      case "hipchat":
-        $controller = new HipChatController();
-      break;
-      case "slack":
-        $controller = new SlackController();
-      break;
-      case "status":
-      case "status.json":
-      case "status.txt":
-        $controller = new StatusController();
-      break;
-      case "weather":
-      case "weather.json":
-      case "weather.txt":
-        $controller = new WeatherController();
-      break;
-      default:
-        throw new ControllerNotFoundException($path);
+    
+    if (Common::$config->Router->maintenance) {
+      $controller = new MaintenanceController();
+    } else if (isset($redirect)) {
+      $controller = new RedirectController(
+        $redirect->getKey(), $redirect->getValue()
+      );
+    } else {
+      switch ($path) {
+        case "":
+          $controller = new RedirectController(
+            "https://api.carlbennett.me/status", 302
+          );
+        break;
+        case "hipchat":
+          switch ($subpath) {
+            case "webhook": case "webhook.json":
+              $controller = new HipChatWebhookController();
+            break;
+            default:
+              throw new ControllerNotFoundException($path . "/" . $subpath);
+          }
+        break;
+        case "slack":
+          switch ($subpath) {
+            case "webhook": case "webhook.md":
+              $controller = new SlackWebhookController();
+            break;
+            default:
+              throw new ControllerNotFoundException($path . "/" . $subpath);
+          }
+        break;
+        case "status": case "status.json": case "status.txt":
+          $controller = new StatusController();
+        break;
+        case "weather": case "weather.json": case "weather.txt":
+          $controller = new WeatherController();
+        break;
+        default:
+          throw new ControllerNotFoundException($path);
+      }
     }
-    if (extension_loaded("newrelic")) {
-      newrelic_add_custom_parameter("controller", (new \ReflectionClass($controller))->getShortName());
-    }
+
+    // Prevent clickjacking globally:
+    $this->setResponseHeader("X-Frame-Options", "DENY");
+    
     $controller->run($this);
     $this->addResponseContent(ob_get_contents());
+    
     ob_end_clean();
   }
 
@@ -197,8 +224,27 @@ class Router {
     } else if (is_string($arg1) && is_string($arg2)) {
       $this->responseHeaders->attach(new HTTPHeader($arg1, $arg2));
     } else {
-      throw new \UnexpectedValueException("Arguments given must be two strings or an HTTPHeader object", -1);
+      throw new UnexpectedValueException("Arguments given must be two strings or an HTTPHeader object", -1);
     }
+  }
+
+  public function setResponseTTL($ttl) {
+    $ttl = (int)$ttl;
+    if ($ttl < 0) {
+      throw new UnexpectedValueException(
+        "Argument must be equal to or greater than zero", -1
+      );
+    }
+    $dtz = new DateTimeZone("GMT");
+    if ($ttl > 0) {
+      $expires = new DateTime("+" . $ttl . " second");
+    } else {
+      $expires = new DateTime("@0");
+    }
+    $expires->setTimezone($dtz);
+    $this->setResponseHeader("Cache-Control", "max-age=" . $ttl);
+    $this->setResponseHeader("Expires", $expires->format("D, d M Y H:i:s e"));
+    $this->setResponseHeader("Pragma", "max-age=" . $ttl);
   }
 
 }

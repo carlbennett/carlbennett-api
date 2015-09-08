@@ -2,10 +2,11 @@
 
 namespace CarlBennett\API\Libraries;
 
-use CarlBennett\API\Libraries\ColorNames;
-use CarlBennett\API\Libraries\Common;
-use CarlBennett\API\Libraries\Magic8Ball;
-use CarlBennett\API\Libraries\WeatherReport;
+use \CarlBennett\API\Libraries\ColorNames;
+use \CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Logger;
+use \CarlBennett\API\Libraries\Magic8Ball;
+use \CarlBennett\API\Libraries\WeatherReport;
 
 class HipChat {
 
@@ -15,7 +16,7 @@ class HipChat {
     $webhook_id     = $webhook_post_data->webhook_id;
     $room_api_token = "";
 
-    foreach (Common::$settings->HipChat->webhook_room_map as $item) {
+    foreach (Common::$config->HipChat->webhook_room_map as $item) {
       if (/*UNCOMMENT*//*$item->room_id == $room_id && */$item->webhook_id == $webhook_id) {
         /*REMOVE*/$room_id = $item->room_id;
         $room_api_token = $item->room_api_token;
@@ -37,13 +38,11 @@ class HipChat {
         $event_result = "invalid event";
     }
 
-    if (extension_loaded("newrelic")) {
-      newrelic_add_custom_parameter("event_name", $event);
-      newrelic_add_custom_parameter("room_id", $room_id);
-      newrelic_add_custom_parameter("webhook_id", $webhook_id);
-      newrelic_add_custom_parameter("room_api_token", $room_api_token);
-      newrelic_add_custom_parameter("event_result", $event_result);
-    }
+    Logger::logMetric("event_name", $event);
+    Logger::logMetric("room_id", $room_id);
+    Logger::logMetric("webhook_id", $webhook_id);
+    Logger::logMetric("room_api_token", $room_api_token);
+    Logger::logMetric("event_result", $event_result);
 
     return $event_result;
   }

@@ -6,24 +6,19 @@ use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
 use \CarlBennett\API\Libraries\Model;
 use \CarlBennett\API\Libraries\View;
-use \CarlBennett\API\Models\Weather as WeatherModel;
+use \CarlBennett\API\Models\Maintenance as MaintenanceModel;
 
-class WeatherPlain extends View {
+class MaintenancePlain extends View {
 
   public function getMimeType() {
     return "text/plain;charset=utf-8";
   }
 
   public function render(Model &$model) {
-    if (!$model instanceof WeatherModel) {
+    if (!$model instanceof MaintenanceModel) {
       throw new IncorrectModelException();
     }
-    $string = $model->weather_report->getAsPlain();
-    if ($string === false) {
-      echo "Error: unable to download report or location not given.\n";
-    } else {
-      echo $string;
-    }
+    echo "Carl Bennett's API is temporarily offline, check back later.\n";
   }
 
 }

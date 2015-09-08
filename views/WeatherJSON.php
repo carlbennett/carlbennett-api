@@ -2,11 +2,11 @@
 
 namespace CarlBennett\API\Views;
 
-use CarlBennett\API\Libraries\Common;
-use CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
-use CarlBennett\API\Libraries\Model;
-use CarlBennett\API\Libraries\View;
-use CarlBennett\API\Models\Weather as WeatherModel;
+use \CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
+use \CarlBennett\API\Libraries\Model;
+use \CarlBennett\API\Libraries\View;
+use \CarlBennett\API\Models\Weather as WeatherModel;
 
 class WeatherJSON extends View {
 

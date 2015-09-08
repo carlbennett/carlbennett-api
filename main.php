@@ -1,10 +1,14 @@
 <?php
 
-use CarlBennett\API\Libraries\Exceptions\APIException;
-use CarlBennett\API\Libraries\Exceptions\ExtensionMissingException;
-use CarlBennett\API\Libraries\Cache;
-use CarlBennett\API\Libraries\Common;
-use CarlBennett\API\Libraries\Router;
+namespace CarlBennett\API;
+
+use \CarlBennett\API\Libraries\Exceptions\APIException;
+use \CarlBennett\API\Libraries\Exceptions\ClassNotFoundException;
+use \CarlBennett\API\Libraries\Cache;
+use \CarlBennett\API\Libraries\Common;
+use \CarlBennett\API\Libraries\Logger;
+use \CarlBennett\API\Libraries\Router;
+use \ReflectionClass;
 
 function main() {
 
@@ -19,7 +23,7 @@ function main() {
     $classShortName = $path;
     $path = "./" . $path . ".php";
     if (!file_exists($path)) {
-      throw new ExtensionMissingException($classShortName);
+      throw new ClassNotFoundException($classShortName);
     }
     require_once($path);
   });
@@ -87,20 +91,10 @@ function main() {
     die(json_encode($json, $flags));
   });
 
-  array_map(function($extensionName){
-    if (!extension_loaded($extensionName)) {
-      throw new ExtensionMissingException($extensionName);
-    }
-  }, ["http", "json"]);
+  Logger::initialize();
 
-  if (extension_loaded("newrelic")) {
-    newrelic_disable_autorum();
-    newrelic_name_transaction("null");
-    newrelic_add_custom_parameter("REMOTE_ADDR", getenv("REMOTE_ADDR"));
-  }
-
-  Common::$settings = json_decode(file_get_contents("./settings.json"));
-  Common::$cache    = new Cache();
+  Common::$config = json_decode(file_get_contents("./config.json"));
+  Common::$cache  = new Cache();
 
   $router = new Router();
   $router->route();

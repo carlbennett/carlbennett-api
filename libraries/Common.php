@@ -2,12 +2,18 @@
 
 namespace CarlBennett\API\Libraries;
 
+use \DateInterval;
+use \StdClass;
+
 final class Common {
 
   public static $cache;
-  public static $settings;
+  public static $config;
 
-  private function __contruct() {} // Deny attempts to instantiate.
+  /**
+   * Block instantiation of this object.
+   */
+  private function __contruct() {}
 
   public static function curlRequest($url, $post_content = null,
       $content_type = "", $connect_timeout = 5, $max_redirects = 10) {
@@ -16,8 +22,10 @@ final class Common {
 
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
 
+    curl_setopt($curl, CURLOPT_AUTOREFERER, true);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($curl, CURLOPT_MAXREDIRS, $max_redirects);
+    curl_setopt($curl, CURLOPT_POSTREDIR, 7);
 
     curl_setopt($curl, CURLOPT_URL, $url);
 
@@ -37,7 +45,7 @@ final class Common {
 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    $response = new \StdClass();
+    $response       = new StdClass();
     $response->data = curl_exec($curl);
     $response->code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     $response->type = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
@@ -48,7 +56,7 @@ final class Common {
   }
 
   public static function intervalToString($di, $zero_interval = "") {
-    if (!$di instanceof \DateInterval) return null;
+    if (!$di instanceof DateInterval) return null;
     $buf = "";
     if ($di->y) { if ($buf) $buf .= ", "; $buf .= $di->y . " year";   if ($di->y != 1) $buf .= "s"; }
     if ($di->m) { if ($buf) $buf .= ", "; $buf .= $di->m . " month";  if ($di->m != 1) $buf .= "s"; }
@@ -125,6 +133,13 @@ final class Common {
     } else {
       return $haystack;
     }
+  }
+  
+  public static function versionProperties() {
+    $versions           = new StdClass();
+    $versions->newrelic = phpversion("newrelic");
+    $versions->php      = phpversion();
+    return $versions;
   }
 
 }

@@ -2,7 +2,9 @@
 
 namespace CarlBennett\API\Libraries\Exceptions;
 
-abstract class APIException extends \Exception {
+use \Exception;
+
+abstract class APIException extends Exception {
 
   protected $httpResponseCode  = 500;
   private $httpResponseHeaders = [];
