@@ -20,7 +20,7 @@ class WeatherMarkdown extends View {
     }
     $string = $model->weather_report->getAsMarkdown();
     if ($string === false) {
-      echo "Error: unable to download report or location not given.\n";
+      echo "**Error:** unable to download report or location not given.\n";
     } else {
       echo $string;
     }

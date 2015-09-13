@@ -82,7 +82,8 @@ class Slack {
         $location = trim($text);
         $info     = (new WeatherReport($location))->getAsMarkdown();
         if ($info === false) {
-          $response = "*Error:* Weather not found for _" . $text . "_.";
+          $response = "*Error:* unable to download report"
+           . " or location not given.";
         } else {
           $response = str_replace("**", "*", $info);
         }
