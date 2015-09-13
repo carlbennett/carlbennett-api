@@ -181,9 +181,7 @@ class WeatherReport {
         "<b>Heat Index:</b> "
         . number_format($report->heat_index) . "&deg;"
         . $report->unit_temperature : "")
-      . (!is_null($report->wind_chill) ||
-         !is_null($report->heat_index) ?
-         "<br/>" : "")
+      . "<br/>"
       . "<b>Humidity:</b> "
         . $report->humidity . "% "
       . "<b>Wind:</b> "
@@ -210,25 +208,23 @@ class WeatherReport {
     }
     $deg = mb_convert_encoding(chr(176), "UTF-8", "ASCII");
     $message = ""
-      . "*Weather Report:* " . $report->location . "\n"
-      . "*Condition:* "
+      . "**Weather Report:** " . $report->location . "\n"
+      . "**Condition:** "
         . $report->condition[1] . ", "
         . number_format($report->condition[0]) . $deg
         . $report->unit_temperature . " "
       . (!is_null($report->wind_chill) ?
-        "*Wind Chill:* "
+        "**Wind Chill:** "
         . number_format($report->wind_chill) . $deg
         . $report->unit_temperature : "")
       . (!is_null($report->heat_index) ?
-        "*Heat Index:* "
+        "**Heat Index:** "
         . number_format($report->heat_index) . $deg
         . $report->unit_temperature : "")
-      . (!is_null($report->wind_chill) ||
-         !is_null($report->heat_index) ?
-         "\n" : "")
-      . "*Humidity:* "
+      . "\n"
+      . "**Humidity:** "
         . $report->humidity . "% "
-      . "*Wind:* "
+      . "**Wind:** "
         . ($report->wind_speed != 0 ? ""
         . self::directionString($report->wind_direction, true)
         . " at " : "")
@@ -237,9 +233,9 @@ class WeatherReport {
         . $report->unit_speed . "\n"
       . (!empty($report->sunrise) &&
          !empty($report->sunset) ? ""
-      . "*Sunrise:* "
+      . "**Sunrise:** "
         . $report->sunrise . " "
-      . "*Sunset:* "
+      . "**Sunset:** "
         . $report->sunset . "\n" : "")
     ;
     return $message;
@@ -297,9 +293,7 @@ class WeatherReport {
         "Heat Index: "
         . number_format($report->heat_index) . $deg
         . $report->unit_temperature : "")
-      . (!is_null($report->wind_chill) ||
-         !is_null($report->heat_index) ?
-         "\n" : "")
+      . "\n"
       . "Humidity: "
         . $report->humidity . "% "
       . "Wind: "

@@ -1,25 +1,29 @@
 <?php
 
-namespace CarlBennett\API\Views\Slack;
+namespace CarlBennett\API\Views;
 
 use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
 use \CarlBennett\API\Libraries\Model;
 use \CarlBennett\API\Libraries\View;
-use \CarlBennett\API\Libraries\WeatherReport;
-use \CarlBennett\API\Models\Slack\Webhook as SlackWebhookModel;
+use \CarlBennett\API\Models\Weather as WeatherModel;
 
-class WebhookMarkdown extends View {
+class WeatherMarkdown extends View {
 
   public function getMimeType() {
     return "text/x-markdown;charset=utf-8";
   }
 
   public function render(Model &$model) {
-    if (!$model instanceof SlackWebhookModel) {
+    if (!$model instanceof WeatherModel) {
       throw new IncorrectModelException();
     }
-    echo $model->result;
+    $string = $model->weather_report->getAsMarkdown();
+    if ($string === false) {
+      echo "Error: unable to download report or location not given.\n";
+    } else {
+      echo $string;
+    }
   }
 
 }

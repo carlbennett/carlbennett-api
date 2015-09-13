@@ -80,8 +80,12 @@ class Slack {
       }
       case "/weather": {
         $location = trim($text);
-        $info     = new WeatherReport($location);
-        $response = $info;
+        $info     = (new WeatherReport($location))->getAsMarkdown();
+        if ($info === false) {
+          $response = "*Error:* Weather not found for _" . $text . "_.";
+        } else {
+          $response = str_replace("**", "*", $info);
+        }
         break;
       }
       default: {

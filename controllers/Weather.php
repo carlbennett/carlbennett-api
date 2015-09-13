@@ -8,6 +8,7 @@ use \CarlBennett\API\Libraries\Router;
 use \CarlBennett\API\Libraries\WeatherReport;
 use \CarlBennett\API\Models\Weather as WeatherModel;
 use \CarlBennett\API\Views\WeatherJSON as WeatherJSONView;
+use \CarlBennett\API\Views\WeatherMarkdown as WeatherMarkdownView;
 use \CarlBennett\API\Views\WeatherPlain as WeatherPlainView;
 
 class Weather extends Controller {
@@ -16,6 +17,9 @@ class Weather extends Controller {
     switch ($router->getRequestPathExtension()) {
       case "json": case "":
         $view = new WeatherJSONView();
+      break;
+      case "md":
+        $view = new WeatherMarkdownView();
       break;
       case "txt":
         $view = new WeatherPlainView();

@@ -186,7 +186,8 @@ class Router {
         case "status": case "status.json": case "status.txt":
           $controller = new StatusController();
         break;
-        case "weather": case "weather.json": case "weather.txt":
+        case "weather": case "weather.json": case "weather.md":
+        case "weather.txt":
           $controller = new WeatherController();
         break;
         default:
