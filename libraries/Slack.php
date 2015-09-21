@@ -59,7 +59,12 @@ class Slack {
         if (empty($ip)) {
           $response = "Error: Please provide an IP address or hostname.";
         } else {
-          $geoinfo  = \geoip_record_by_name($ip);
+          // Get GeoIP without throwing E_NOTICE error:
+          $error_reporting = error_reporting();
+          error_reporting($error_reporting & ~E_NOTICE);
+          $geoinfo = geoip_record_by_name($ip);
+          error_reporting($error_reporting);
+
           $response = "query_address " . $ip . "\n";
           if ($geoinfo) {
             ksort($geoinfo);
