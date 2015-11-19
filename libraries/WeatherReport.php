@@ -3,6 +3,7 @@
 namespace CarlBennett\API\Libraries;
 
 use \CarlBennett\API\Libraries\Common;
+use \StdClass;
 
 class WeatherReport {
 
@@ -86,7 +87,7 @@ class WeatherReport {
     }
     $subreport = $raw_report->query->results->channel;
 
-    $report                   = new \StdClass();
+    $report                   = new StdClass();
     $report->city             = $subreport->location->city;
     $report->region           = $subreport->location->region;
     $report->country          = $subreport->location->country;
@@ -136,7 +137,7 @@ class WeatherReport {
   }
 
   public function standardizeReportHell() {
-    $report                   = new \StdClass();
+    $report                   = new StdClass();
 
     mt_srand(time() / 3600); // change the mt_rand() seed every hour.
 
@@ -242,7 +243,7 @@ class WeatherReport {
   }
 
   public function getAsMessage(&$webhook_post_data) {
-    $message          = new \StdClass();
+    $message          = new StdClass();
     $message->message = $this->getAsHtml();
     $message->format  = "html";
     if ($message->message === false) {
