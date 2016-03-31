@@ -1,45 +1,41 @@
 #!/bin/bash
-printf "===============================================================================\n"
 
-printf "== Configuring environment ====================================================\n"
-DEPLOY_SOURCE_PATH=$(git rev-parse --show-toplevel)
-DEPLOY_TARGET_HOST="fc22.aws.carlbennett.me"
-DEPLOY_TARGET_USER="cbennett"
-DEPLOY_TARGET_PATH="/home/nginx/carlbennett-api"
+if [ -z "${SOURCE_DIRECTORY}" ]; then
+  SOURCE_DIRECTORY="$(git rev-parse --show-toplevel)/"
+fi
+if [ -z "${TARGET_DIRECTORY}" ]; then
+  TARGET_DIRECTORY="/home/nginx/carlbennett-api"
+fi
 
-printf "DEPLOY_SOURCE_PATH = ${DEPLOY_SOURCE_PATH}\n"
-printf "DEPLOY_TARGET_HOST = ${DEPLOY_TARGET_HOST}\n"
-printf "DEPLOY_TARGET_USER = ${DEPLOY_TARGET_USER}\n"
-printf "DEPLOY_TARGET_PATH = ${DEPLOY_TARGET_PATH}\n"
+DEPLOY_TARGET="$1"
+if [ -z "${DEPLOY_TARGET}" ]; then
+  DEPLOY_TARGET="$(cat ${SOURCE_DIRECTORY}/.rsync-target 2>/dev/null)"
+fi
+if [ -z "${DEPLOY_TARGET}" ]; then
+  read -p "Enter the server to deploy to: " DEPLOY_TARGET
+fi
+if [ -z "${DEPLOY_TARGET}" ]; then
+  printf "Deploy target not provided, aborting...\n" 1>&2
+  exit 1
+fi
+echo "${DEPLOY_TARGET}" > ${SOURCE_DIRECTORY}/.rsync-target
 
-printf "== Sanity check ===============================================================\n"
-[ "$DEPLOY_SOURCE_PATH" == "" ] && \
-  printf "Error: DEPLOY_SOURCE_PATH is empty.\n" && exit 1
-[ "$DEPLOY_TARGET_HOST" == "" ] && \
-  printf "Error: DEPLOY_TARGET_HOST is empty.\n" && exit 1
-[ "$DEPLOY_TARGET_USER" == "" ] && \
-  printf "Error: DEPLOY_TARGET_USER is empty.\n" && exit 1
-[ "$DEPLOY_TARGET_PATH" == "" ] && \
-  printf "Error: DEPLOY_TARGET_PATH is empty.\n" && exit 1
+set -e
 
-printf "== Deploying to target ========================================================\n"
-CUR_DIR=`pwd` && cd "$DEPLOY_SOURCE_PATH"
-CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
+printf "[1/4] Getting version identifier of this deploy...\n"
+DEPLOY_VERSION="$(git describe --always --tags)"
 
-rsync --rsync-path="sudo rsync" -Oprtvz --delete \
-  --exclude-from="rsync-exclude.txt" \
-  "${DEPLOY_SOURCE_PATH}/" \
-  "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}:${DEPLOY_TARGET_PATH}/"
-CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
+printf "[2/4] Building version information into this deploy...\n"
+printf "${DEPLOY_VERSION}" > ${SOURCE_DIRECTORY}/.rsync-version
 
-cd "$CUR_DIR"
-CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
+printf "[3/4] Syncing to deploy target...\n"
+rsync -avzc --delete --delete-excluded --delete-after --progress \
+  --exclude-from="${SOURCE_DIRECTORY}/rsync-exclude.txt" \
+  --chown=nginx:www-data --rsync-path="sudo rsync" \
+  "${SOURCE_DIRECTORY}" \
+  ${DEPLOY_TARGET}:"${TARGET_DIRECTORY}"
 
-printf "== Changing permissions on target =============================================\n"
-ssh "${DEPLOY_TARGET_USER}@${DEPLOY_TARGET_HOST}" \
-  sudo chown nginx:www-data -Rv "$DEPLOY_TARGET_PATH" | \
-  grep -v "^ownership of .* retained as .*$"
-CODE="$?" && [ "$CODE" -ne 0 ] && exit "$CODE"
+printf "[4/4] Post-deploy clean up...\n"
+rm ${SOURCE_DIRECTORY}/.rsync-version
 
-printf "===============================================================================\n"
-exit 0
+printf "Operation complete!\n"

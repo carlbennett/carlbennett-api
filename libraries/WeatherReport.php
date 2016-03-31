@@ -103,6 +103,10 @@ class WeatherReport {
     $report->sunrise          = $subreport->astronomy->sunrise;
     $report->sunset           = $subreport->astronomy->sunset;
 
+    $report->city    = trim($report->city);
+    $report->region  = trim($report->region);
+    $report->country = trim($report->country);
+
     $report->location         = "";
     if (!empty($report->city)) {
       if (!empty($report->location)) $report->location .= ", ";
