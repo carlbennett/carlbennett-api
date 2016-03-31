@@ -89,8 +89,9 @@ function main() {
 
   Logger::initialize();
 
-  Common::$config = json_decode(file_get_contents("./config.json"));
-  Common::$cache  = new Cache();
+  Common::$config  = json_decode(file_get_contents("./config.json"));
+  Common::$cache   = new Cache();
+  Common::$version = Common::getVersionProperties();
 
   $router = new Router();
   $router->route();

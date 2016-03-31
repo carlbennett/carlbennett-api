@@ -9,6 +9,7 @@ final class Common {
 
   public static $cache;
   public static $config;
+  public static $version;
 
   /**
    * Block instantiation of this object.
@@ -53,6 +54,14 @@ final class Common {
 
     curl_close($curl);
     return $response;
+  }
+  
+  public static function getVersionProperties() {
+    $versions           = new StdClass();
+    $versions->api      = file_get_contents("./.rsync-version");
+    $versions->newrelic = phpversion("newrelic");
+    $versions->php      = phpversion();
+    return $versions;
   }
 
   public static function intervalToString($di, $zero_interval = "") {
@@ -135,11 +144,4 @@ final class Common {
     }
   }
   
-  public static function versionProperties() {
-    $versions           = new StdClass();
-    $versions->newrelic = phpversion("newrelic");
-    $versions->php      = phpversion();
-    return $versions;
-  }
-
 }
