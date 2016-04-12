@@ -87,6 +87,7 @@ class WeatherReport {
     }
     $subreport = $raw_report->query->results->channel;
 
+    // create our object based on their object
     $report                   = new StdClass();
     $report->city             = $subreport->location->city;
     $report->region           = $subreport->location->region;
@@ -102,12 +103,35 @@ class WeatherReport {
     $report->heat_index       = null; // We calculate this at the end.
     $report->sunrise          = $subreport->astronomy->sunrise;
     $report->sunset           = $subreport->astronomy->sunset;
-
-    $report->city    = trim($report->city);
-    $report->region  = trim($report->region);
-    $report->country = trim($report->country);
-
     $report->location         = "";
+
+    // ensure our object types are how we intend
+    $report->city             = (string) trim($report->city);
+    $report->region           = (string) trim($report->region);
+    $report->country          = (string) trim($report->country);
+    $report->unit_temperature = (string) trim($report->unit_temperature);
+    $report->unit_speed       = (string) trim($report->unit_speed);
+    $report->condition[0]     = (int) str_replace(
+                                  ",", "", $report->condition[0]
+                                );
+    $report->condition[1]     = (string) trim($report->condition[1]);
+    $report->wind_chill       = (
+                                  $report->condition[0] > 50 ? null :
+                                  (int) $report->wind_chill
+                                );
+    $report->wind_speed       = (int) $report->wind_speed;
+    $report->wind_direction   = (int) $report->wind_direction;
+    $report->humidity         = (int) $report->humidity;
+    $report->sunrise          = (string) trim($report->sunrise);
+    $report->sunset           = (string) trim($report->sunset);
+
+    // calculate the heat index (not provided in their report)
+    $report->heat_index     = $this->calculateHeatIndex(
+                                $report->condition[0],
+                                $report->humidity
+                              );
+
+    // create the location based on their report
     if (!empty($report->city)) {
       if (!empty($report->location)) $report->location .= ", ";
       $report->location .= $report->city;
@@ -120,22 +144,6 @@ class WeatherReport {
       if (!empty($report->location)) $report->location .= ", ";
       $report->location .= $report->country;
     }
-
-    // clean up the object a bit
-    $report->condition[0]   = (int)str_replace(",", "", $report->condition[0]);
-    $report->wind_chill     = (
-                                $report->condition[0] > 50 ? null :
-                                (int)$report->wind_chill
-                              );
-    $report->wind_speed     = (int)$report->wind_speed;
-    $report->wind_direction = (int)$report->wind_direction;
-    $report->humidity       = (int)$report->humidity;
-
-    // report the heat index (not provided in the $subreport)
-    $report->heat_index     = $this->calculateHeatIndex(
-                                $report->condition[0],
-                                $report->humidity
-                              );
 
     return $report;
   }
