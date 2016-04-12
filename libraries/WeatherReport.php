@@ -80,6 +80,24 @@ class WeatherReport {
     return json_decode($response->data);
   }
 
+  public static function padTime($str_time) {
+    // Converts "7:1 am" to "7:01 am" as an example
+    $a = explode(" ", $str_time);
+    $t = explode(":", array_shift($a));
+    $h = (isset($t[0]) ? (int) $t[0] : null);
+    $m = (isset($t[1]) ? (int) $t[1] : null);
+    $s = (isset($t[2]) ? (int) $t[2] : null);
+
+    if ($m) $m = substr("0" . $m, -2);
+    if ($s) $s = substr("0" . $s, -2);
+
+    if (!$h || !$m) return null;
+    $r = $h . ":" . $m;
+    if ($s) $r .= ":" . $s;
+    $r .= " " . implode(" ", $a);
+    return $r;
+  }
+
   public function standardizeReport(&$raw_report) {
     if ($raw_report->query->count < 1 ||
         is_null($raw_report->query->results)) {
@@ -130,6 +148,10 @@ class WeatherReport {
                                 $report->condition[0],
                                 $report->humidity
                               );
+
+    // their report uses ints and concatenates them improperly, let's fix that
+    $report->sunrise = self::padTime($report->sunrise);
+    $report->sunset  = self::padTime($report->sunset);
 
     // create the location based on their report
     if (!empty($report->city)) {
