@@ -54,7 +54,7 @@ function main() {
       ],
     ];
     if (ini_get("display_errors")) {
-      $json["error"]["file"] = Common::stripLeftPattern($e->getFile(), "/home/nginx/carlbennett-api");
+      $json["error"]["file"] = Common::stripLeftPattern($e->getFile(), getenv("DOCUMENT_ROOT"));
       $json["error"]["line"] = $e->getLine();
     }
     Logger::logMetric("error_data", json_encode($json, JSON_PRETTY_PRINT));
@@ -79,7 +79,7 @@ function main() {
     ];
     if (ini_get("display_errors")) {
       $json["error"]["message"] = $errstr;
-      $json["error"]["file"] = Common::stripLeftPattern($errfile, "/home/nginx/carlbennett-api");
+      $json["error"]["file"] = Common::stripLeftPattern($errfile, getenv("DOCUMENT_ROOT"));
       $json["error"]["line"] = $errline;
     }
     Logger::logMetric("error_data", json_encode($json, JSON_PRETTY_PRINT));
