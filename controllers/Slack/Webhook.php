@@ -24,7 +24,7 @@ class Webhook extends Controller {
       throw new MethodNotAllowedException(["POST"]);
     }
     $model         = new SlackWebhookModel();
-    $webhook_data  = (object)$router->getRequestBodyArray();
+    $webhook_data  = $router->getRequestBodyArray();
     $model->result = (new SlackLib())->handleWebhook($webhook_data);
     ob_start();
     $view->render($model);

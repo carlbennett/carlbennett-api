@@ -9,24 +9,37 @@ use \CarlBennett\API\Libraries\WeatherReport;
 
 class Slack {
 
-  public function handleWebhook(&$webhook_post_data) {
-    $token        = $webhook_post_data->token;
-    $team_id      = $webhook_post_data->team_id;
-    $channel_id   = $webhook_post_data->channel_id;
-    $channel_name = $webhook_post_data->channel_name;
-    $user_id      = $webhook_post_data->user_id;
-    $user_name    = $webhook_post_data->user_name;
-    $command      = $webhook_post_data->command;
-    $text         = $webhook_post_data->text;
+  public function handleWebhook(&$data) {
+    foreach ($data as $k => $v) {
+      Logger::logMetric($k, $v);
+    }
 
-    Logger::logMetric("token", $token);
-    Logger::logMetric("team_id", $team_id);
-    Logger::logMetric("channel_id", $channel_id);
-    Logger::logMetric("channel_name", $channel_name);
-    Logger::logMetric("user_id", $user_id);
-    Logger::logMetric("user_name", $user_name);
-    Logger::logMetric("command", $command);
-    Logger::logMetric("text", $text);
+    $token        = (isset($data["token"])
+                  ? $data["token"] : null);
+    $team_id      = (isset($data["team_id"])
+                  ? $data["team_id"] : null);
+    $team_domain  = (isset($data["team_domain"])
+                  ? $data["team_domain"] : null);
+    $channel_id   = (isset($data["channel_id"])
+                  ? $data["channel_id"] : null);
+    $channel_name = (isset($data["channel_name"])
+                  ? $data["channel_name"] : null);
+    $timestamp    = (isset($data["timestamp"])
+                  ? $data["timestamp"] : null);
+    $user_id      = (isset($data["user_id"])
+                  ? $data["user_id"] : null);
+    $user_name    = (isset($data["user_name"])
+                  ? $data["user_name"] : null);
+    $command      = (isset($data["command"])
+                  ? $data["command"] : null);
+    $text         = (isset($data["text"])
+                  ? $data["text"] : null);
+    $trigger_word = (isset($data["trigger_word"])
+                  ? $data["trigger_word"] : null);
+
+    if (empty($command) && !empty($trigger_word)) {
+      $command = $trigger_word;
+    }
 
     $response = null;
     switch ($command) {

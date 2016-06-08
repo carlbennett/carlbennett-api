@@ -55,7 +55,8 @@
       {
         "team": "abc",
         "user": "xyz",
-        "token": "abcxyz"
+        "token": "abcxyz",
+        "outgoing_webhook": null
       }
     ]
   }
