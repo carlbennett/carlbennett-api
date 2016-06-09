@@ -71,7 +71,8 @@ class Slack {
       }
       case "dig":
       case "host":
-      case "nslookup": {
+      case "nslookup":
+      case "whois": {
         $output = Common::shellSafeExecute($command, $text);
         if (empty($output)) {
           $response = "No output from the command-line program.";
