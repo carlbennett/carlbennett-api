@@ -39,12 +39,25 @@ class Slack {
 
     if (empty($command) && !empty($trigger_word)) {
       $command = $trigger_word;
+      $text    = preg_replace("#<https?://.*\|(.*)>#i", "$1", $text);
     }
+
+    if (substr($text, 0, strlen($command)) === $command) {
+      $text = substr($text, strlen($command) + 1);
+    }
+
+    $command = ltrim($command, "./");
+
+    file_put_contents("/tmp/slack-webhook.json", json_encode([
+      "command" => $command,
+      "text"    => $text,
+      "data"    => $data,
+    ], JSON_PRETTY_PRINT));
 
     $response = null;
     switch ($command) {
-      case "/8ball":
-      case "/magic8ball": {
+      case "8ball":
+      case "magic8ball": {
         $question = trim($text);
         if (strpos($question, "\n") !== false) {
           $response = "Only one-line sentences please!";
@@ -56,10 +69,10 @@ class Slack {
         }
         break;
       }
-      case "/dig":
-      case "/host":
-      case "/nslookup": {
-        $output = Common::shellSafeExecute(substr($command, 1), $text);
+      case "dig":
+      case "host":
+      case "nslookup": {
+        $output = Common::shellSafeExecute($command, $text);
         if (empty($output)) {
           $response = "No output from the command-line program.";
         } else {
@@ -67,7 +80,7 @@ class Slack {
         }
         break;
       }
-      case "/geoip": {
+      case "geoip": {
         $ip = trim($text);
         if (empty($ip)) {
           $response = "Error: Please provide an IP address or hostname.";
@@ -96,7 +109,7 @@ class Slack {
         }
         break;
       }
-      case "/weather": {
+      case "weather": {
         $location = trim($text);
         $info     = (new WeatherReport($location))->getAsMarkdown();
         if ($info === false) {
@@ -111,7 +124,11 @@ class Slack {
         $response = "invalid_command: " . $command;
       }
     }
-    return $response;
+    if (isset($trigger_word)) {
+      return json_encode(["text" => $response]);
+    } else {
+      return $response;
+    }
   }
 
 }

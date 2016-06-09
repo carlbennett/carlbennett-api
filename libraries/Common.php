@@ -58,7 +58,8 @@ final class Common {
   
   public static function getVersionProperties() {
     $versions           = new StdClass();
-    $versions->api      = file_get_contents("./.rsync-version");
+    $versions->api      = (is_readable("./.rsync-version") ?
+                          file_get_contents("./.rsync-version") : null);
     $versions->newrelic = phpversion("newrelic");
     $versions->php      = phpversion();
     return $versions;
