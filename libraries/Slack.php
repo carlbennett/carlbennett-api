@@ -48,12 +48,6 @@ class Slack {
 
     $command = ltrim($command, "./");
 
-    file_put_contents("/tmp/slack-webhook.json", json_encode([
-      "command" => $command,
-      "text"    => $text,
-      "data"    => $data,
-    ], JSON_PRETTY_PRINT));
-
     $response = null;
     switch ($command) {
       case "8ball":
