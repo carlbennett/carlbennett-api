@@ -22,7 +22,7 @@ class Software {
     $result->status->code    = self::UPDATE_STATUS_BAD_REQUEST;
     $result->status->message = "Bad request";
     $result->update          = null;
-    
+
     $result->product = (isset($data->product) ? $data->product : null);
     $result->version = (isset($data->version) ? $data->version : null);
 
