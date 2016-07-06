@@ -55,11 +55,11 @@ final class Common {
     curl_close($curl);
     return $response;
   }
-  
+
   public static function getVersionProperties() {
     $versions           = new StdClass();
-    $versions->api      = (is_readable("./.rsync-version") ?
-                          file_get_contents("./.rsync-version") : null);
+    $versions->api      = (is_readable("../etc/.rsync-version") ?
+                          file_get_contents("../etc/.rsync-version") : null);
     $versions->newrelic = phpversion("newrelic");
     $versions->php      = phpversion();
     return $versions;
@@ -102,7 +102,7 @@ final class Common {
     if (stripos($user_agent, "Trident" ) !== false) return true;
     if (stripos($user_agent, "Blink"   ) !== false) return true;
 
-    // Not a browser 
+    // Not a browser
     return false;
   }
 
@@ -144,5 +144,5 @@ final class Common {
       return $haystack;
     }
   }
-  
+
 }
