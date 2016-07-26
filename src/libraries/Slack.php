@@ -71,7 +71,7 @@ class Slack {
         if (empty($output)) {
           $response = "No output from the command-line program.";
         } else {
-          $response = "```\n" . Common::stripExcessLines($output) . "\n```";
+          $response = "```" . Common::stripExcessLines($output) . "```";
         }
         break;
       }
