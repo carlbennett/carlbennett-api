@@ -1,0 +1,53 @@
+{
+    "name": "carlbennett/carlbennett-api",
+    "description": "API code that powers api.carlbennett.me",
+    "type": "project",
+    "keywords": [
+        "carl",
+        "bennett",
+        "api",
+        "slack",
+        "hipchat",
+        "weather",
+        "integration"
+    ],
+    "homepage": "https://github.com/carlbennett/carlbennett-api",
+    "license": "CC-BY-SA-4.0",
+    "authors": [
+        {
+            "name": "Carl Bennett",
+            "email": "carl@carlbennett.me"
+        }
+    ],
+    "config": {
+      "vendor-dir": "lib"
+    },
+    "autoload": {
+        "psr-4": {
+            "CarlBennett\\API\\Controllers\\": "src/controllers",
+            "CarlBennett\\API\\Libraries\\": "src/libraries",
+            "CarlBennett\\API\\Models\\": "src/models",
+            "CarlBennett\\API\\Templates\\": "src/templates",
+            "CarlBennett\\API\\Views\\": "src/views"
+        }
+    },
+    "require": {
+        "carlbennett/php-mvc": "~2",
+        "ext-curl": "*",
+        "ext-geoip": "*",
+        "ext-gmp": "*",
+        "ext-http": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-mcrypt": "*",
+        "ext-memcached": "*",
+        "ext-pdo": "*",
+        "php-64bit": ">=5.5.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/carlbennett/php-mvc"
+        }
+    ]
+}

@@ -20,4 +20,6 @@
 .Spotlight-V100
 .Trashes
 ._*
+/lib/
+/tmp/
 Thumbs.db
