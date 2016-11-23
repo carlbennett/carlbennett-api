@@ -44,7 +44,7 @@ class Status extends Controller {
     return true;
   }
 
-  private function getGeoIP($hostname) {
+  private static function getGeoIP($hostname) {
     // Get GeoIP without throwing E_NOTICE error:
     $error_reporting = error_reporting();
     error_reporting($error_reporting & ~E_NOTICE);
