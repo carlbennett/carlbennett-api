@@ -6,6 +6,7 @@ use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Logger;
 use \CarlBennett\API\Libraries\Magic8Ball;
 use \CarlBennett\API\Libraries\WeatherReport;
+use \CarlBennett\MVC\Libraries\GeoIP;
 
 class Slack {
 
@@ -80,21 +81,9 @@ class Slack {
         if (empty($ip)) {
           $response = "Error: Please provide an IP address or hostname.";
         } else {
-          // Get GeoIP without throwing E_NOTICE error:
-          $error_reporting = error_reporting();
-          error_reporting($error_reporting & ~E_NOTICE);
-          $geoinfo = geoip_record_by_name($ip);
-          error_reporting($error_reporting);
-
-          if ($geoinfo && !empty($geoinfo['region'])) {
-            $geoinfo['region_name'] = geoip_region_name_by_code(
-              $geoinfo['country_code'], $geoinfo['region']
-            );
-          }
-
+          $geoinfo = GeoIP::get($ip);
           $response = "query_address " . $ip . "\n";
           if ($geoinfo) {
-            ksort($geoinfo);
             foreach ($geoinfo as $key => $val) {
               if (!empty($val))
                 $response .= "geoinfo_" . $key . " " . $val . "\n";
