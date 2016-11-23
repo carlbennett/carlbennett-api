@@ -86,6 +86,12 @@ class Slack {
           $geoinfo = geoip_record_by_name($ip);
           error_reporting($error_reporting);
 
+          if ($geoinfo && !empty($geoinfo['region'])) {
+            $geoinfo['region_name'] = geoip_region_name_by_code(
+              $geoinfo['country_code'], $geoinfo['region']
+            );
+          }
+
           $response = "query_address " . $ip . "\n";
           if ($geoinfo) {
             ksort($geoinfo);
