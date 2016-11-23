@@ -57,6 +57,7 @@ class Status extends Controller {
       );
     }
 
+    ksort($geoinfo);
     return $geoinfo;
   }
 
