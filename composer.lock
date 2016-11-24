@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "332e90698950ab3dd2e375b1f124cb2c",
-    "content-hash": "d8d3733c39a59e2ac05dd7cdb11bdc94",
+    "hash": "c570253847e4f8adb9c98ad816e1ecd8",
+    "content-hash": "93aae4375b507f9737601730d500eee2",
     "packages": [
         {
             "name": "carlbennett/php-mvc",
