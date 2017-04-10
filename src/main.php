@@ -26,6 +26,8 @@ use \CarlBennett\API\Libraries\Exceptions\APIException;
 use \CarlBennett\API\Libraries\Exceptions\ClassNotFoundException;
 use \CarlBennett\API\Libraries\Logger;
 use \CarlBennett\API\Libraries\Router;
+use \CarlBennett\MVC\Libraries\Common as CommonMVCLib;
+use \CarlBennett\MVC\Libraries\DatabaseDriver;
 use \CarlBennett\MVC\Libraries\GlobalErrorHandler;
 use \ReflectionClass;
 
@@ -47,6 +49,15 @@ function main() {
 
     Common::$cache   = new Cache();
     Common::$version = Common::getVersionProperties();
+
+    CommonMVCLib::$database = null;
+
+    DatabaseDriver::$character_set = Common::$config->MySQL->character_set;
+    DatabaseDriver::$database_name = Common::$config->MySQL->database;
+    DatabaseDriver::$password      = Common::$config->MySQL->password;
+    DatabaseDriver::$servers       = Common::$config->MySQL->servers;
+    DatabaseDriver::$timeout       = Common::$config->MySQL->timeout;
+    DatabaseDriver::$username      = Common::$config->MySQL->username;
 
     $router = new Router();
     $router->route();

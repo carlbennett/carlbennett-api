@@ -7,6 +7,8 @@ use \CarlBennett\API\Controllers\Maintenance as MaintenanceController;
 use \CarlBennett\API\Controllers\Redirect as RedirectController;
 use \CarlBennett\API\Controllers\Slack\Webhook as SlackWebhookController;
 use \CarlBennett\API\Controllers\Software\Update as SoftwareUpdateController;
+use \CarlBennett\API\Controllers\Software\VerifyLicense
+  as SoftwareVerifyLicenseController;
 use \CarlBennett\API\Controllers\Status as StatusController;
 use \CarlBennett\API\Controllers\Weather as WeatherController;
 use \CarlBennett\API\Libraries\Common;
@@ -188,6 +190,9 @@ class Router {
           switch ($subpath) {
             case "update": case "update.json":
               $controller = new SoftwareUpdateController();
+            break;
+            case "verifylicense": case "verifylicense.json":
+              $controller = new SoftwareVerifyLicenseController();
             break;
             default:
               throw new ControllerNotFoundException($path . "/" . $subpath);

@@ -20,11 +20,15 @@
   },
   "MySQL": {
     "character_set": "utf8",
-    "collate": "utf8_unicode_ci",
-    "connect_timeout": 5,
-    "hostname": "localhost",
-    "name": "carlbennett-api",
+    "database": "carlbennett_api",
     "password": "",
+    "servers": [
+      {
+        "hostname": "127.0.0.1",
+        "port": 3306
+      }
+    ],
+    "timeout": 3,
     "username": ""
   },
   "Router": {
