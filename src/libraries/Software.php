@@ -75,13 +75,16 @@ class Software {
   }
 
   public function &handleVerifyLicense(StdClass &$data, &$http_code) {
-    $http_code               = 400;
-    $result                  = new StdClass();
-    $result->status          = new StdClass();
-    $result->status->code    = self::VERIFYLICENSE_STATUS_BAD_REQUEST;
-    $result->status->message = 'Bad request';
-    $result->invoice_id      = null;
-    $result->issue_date      = null;
+    $http_code = 400;
+
+    $result                     = new StdClass();
+    $result->issue_date         = null;
+    $result->label              = null;
+    $result->license            = null;
+    $result->paypal_transaction = null;
+    $result->status             = new StdClass();
+    $result->status->code       = self::VERIFYLICENSE_STATUS_BAD_REQUEST;
+    $result->status->message    = 'Bad request';
 
     $result->license = (isset($data->license) ? $data->license : null);
 
@@ -96,14 +99,15 @@ class Software {
       $result->status->message = 'Bad request: Malformed license string';
       return $result;
     } catch (SLNFException $e) {
-      $http_code               = 404;
+      $http_code = 404;
       $result->status->code    = self::VERIFYLICENSE_STATUS_NOT_FOUND;
       $result->status->message = 'Unknown license';
       return $result;
     }
 
-    $result->invoice_id = $license->getInvoiceId();
-    $result->issue_date = $license->getIssueDate();
+    $result->issue_date = $license->getIssueDate()->format( DATE_RFC2822 );
+    $result->label = $license->getLabel();
+    $result->paypal_transaction = $license->getPayPalTransaction();
 
     $http_code = 200;
     if (!$license->getActive()) {

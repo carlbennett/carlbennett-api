@@ -18,24 +18,27 @@ class License {
   private $active;
   private $email_address;
   private $id;
-  private $invoice_id;
   private $issue_date;
+  private $label;
+  private $paypal_transaction;
 
   public function __construct($data) {
     if (is_string($data) && strlen($data) == 36) {
-      $this->active        = null;
-      $this->email_address = null;
-      $this->id            = $data;
-      $this->invoice_id    = null;
-      $this->issue_date    = null;
+      $this->active             = null;
+      $this->email_address      = null;
+      $this->id                 = $data;
+      $this->issue_date         = null;
+      $this->label              = null;
+      $this->paypal_transaction = null;
       $this->refresh();
     } else if ($data instanceof StdClass) {
       self::normalize($data);
-      $this->active        = $data->active;
-      $this->email_address = $data->email_address;
-      $this->id            = $data->id;
-      $this->invoice_id    = $data->invoice_id;
-      $this->issue_date    = $data->issue_date;
+      $this->active             = $data->active;
+      $this->email_address      = $data->email_address;
+      $this->id                 = $data->id;
+      $this->issue_date         = $data->issue_date;
+      $this->label              = $data->label;
+      $this->paypal_transaction = $data->paypal_transaction;
     } else {
       throw new InvalidArgumentException('Cannot use data argument');
     }
@@ -53,10 +56,6 @@ class License {
     return $this->id;
   }
 
-  public function getInvoiceId() {
-    return $this->invoice_id;
-  }
-
   public function getIssueDate() {
     if (is_null($this->issue_date)) {
       return null;
@@ -65,14 +64,23 @@ class License {
     }
   }
 
+  public function getLabel() {
+    return $this->label;
+  }
+
+  public function getPayPalTransaction() {
+    return $this->paypal_transaction;
+  }
+
   protected static function normalize(StdClass &$data) {
     $data->active        = (int)    $data->active;
     $data->email_address = (string) $data->email_address;
     $data->id            = (string) $data->id;
     $data->issue_date    = (string) $data->issue_date;
+    $data->label         = (string) $data->label;
 
-    if (!is_null($data->invoice_id))
-      $data->invoice_id = (string) $data->invoice_id;
+    if (!is_null($data->paypal_transaction))
+      $data->paypal_transaction = (string) $data->paypal_transaction;
 
     return true;
   }
@@ -87,8 +95,9 @@ class License {
           `active`,
           `email_address`,
           `id`,
-          `invoice_id`,
-          `issue_date`
+          `issue_date`,
+          `label`,
+          `paypal_transaction`
         FROM `software_licenses`
         WHERE `id` = :id
         LIMIT 1;
@@ -102,11 +111,12 @@ class License {
       $row = $stmt->fetch(PDO::FETCH_OBJ);
       $stmt->closeCursor();
       self::normalize($row);
-      $this->active        = $row->active;
-      $this->email_address = $row->email_address;
-      $this->id            = $row->id;
-      $this->invoice_id    = $row->invoice_id;
-      $this->issue_date    = $row->issue_date;
+      $this->active             = $row->active;
+      $this->email_address      = $row->email_address;
+      $this->id                 = $row->id;
+      $this->issue_date         = $row->issue_date;
+      $this->label              = $row->label;
+      $this->paypal_transaction = $row->paypal_transaction;
       return true;
     } catch (PDOException $e) {
       throw new QueryException('Cannot refresh software license object');
