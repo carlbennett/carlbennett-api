@@ -80,6 +80,10 @@ class WeatherReport {
     return json_decode($response->data);
   }
 
+  private static function nullIfUnset( $object, $key ) {
+    return (isset($object->$key) ? $object->$key : null);
+  }
+
   public static function padTime($str_time) {
     // Converts "7:1 am" to "7:01 am" as an example
     $a = explode(" ", $str_time);
@@ -105,10 +109,11 @@ class WeatherReport {
     }
     $subreport = $raw_report->query->results->channel;
 
-    $location = (isset($subreport->location) ? $subreport->location : null);
-    $item = (isset($subreport->item) ? $subreport->item : null);
-    $wind = (isset($subreport->wind) ? $subreport->wind : null);
-    $atmos = (isset($subreport->atmosphere) ? $subreport->atmosphere : null);
+    $location = self::nullIfUnset($subreport, "location");
+    $item = self::nullIfUnset($subreport, "item");
+    $wind = self::nullIfUnset($subreport, "wind");
+    $atmos = self::nullIfUnset($subreport, "atmosphere");
+    $astro = self::nullIfUnset($subreport, "astronomy");
 
     if (!$location) {
       return false;
@@ -116,22 +121,22 @@ class WeatherReport {
 
     // create our object based on their object
     $report                   = new StdClass();
-    $report->location         = ($location ? "" : $location);
-    $report->city             = ($location ? $location->city : null);
-    $report->region           = ($location ? $location->region : null);
-    $report->country          = ($location ? $location->country : null);
+    $report->location         = ($location ? null : $location);
+    $report->city             = self::nullIfUnset($location, "city");
+    $report->region           = self::nullIfUnset($location, "region");
+    $report->country          = self::nullIfUnset($location, "country");
     $report->unit_temperature = $subreport->units->temperature;
     $report->unit_speed       = $subreport->units->speed;
     $report->condition        = (
       $item ? [$item->condition->temp, $item->condition->text] : [null, null]
     );
-    $report->wind_chill       = ($wind ? $wind->chill : null);
-    $report->wind_speed       = ($wind ? $wind->speed : null);
-    $report->wind_direction   = ($wind ? $wind->direction : null);
-    $report->humidity         = ($atmos ? $atmos->humidity : null);
+    $report->wind_chill       = self::nullIfUnset($wind, "chill");
+    $report->wind_speed       = self::nullIfUnset($wind, "speed");
+    $report->wind_direction   = self::nullIfUnset($wind, "direction");
+    $report->humidity         = self::nullIfUnset($atmos, "humidity");
     $report->heat_index       = null; // We calculate this at the end.
-    $report->sunrise          = ($atmos ? $atmos->sunrise : null);
-    $report->sunset           = ($atmos ? $atmos->sunset : null);
+    $report->sunrise          = self::nullIfUnset($astro, "sunrise");
+    $report->sunset           = self::nullIfUnset($astro, "sunset");
 
     // ensure our object types are how we intend
     $report->city             = (string) trim($report->city);
