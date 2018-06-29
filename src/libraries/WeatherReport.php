@@ -105,23 +105,33 @@ class WeatherReport {
     }
     $subreport = $raw_report->query->results->channel;
 
+    $location = (isset($subreport->location) ? $subreport->location : null);
+    $item = (isset($subreport->item) ? $subreport->item : null);
+    $wind = (isset($subreport->wind) ? $subreport->wind : null);
+    $atmos = (isset($subreport->atmosphere) ? $subreport->atmosphere : null);
+
+    if (!$location) {
+      return false;
+    }
+
     // create our object based on their object
     $report                   = new StdClass();
-    $report->city             = $subreport->location->city;
-    $report->region           = $subreport->location->region;
-    $report->country          = $subreport->location->country;
+    $report->location         = ($location ? "" : $location);
+    $report->city             = ($location ? $location->city : null);
+    $report->region           = ($location ? $location->region : null);
+    $report->country          = ($location ? $location->country : null);
     $report->unit_temperature = $subreport->units->temperature;
     $report->unit_speed       = $subreport->units->speed;
-    $report->condition        = [$subreport->item->condition->temp,
-                                 $subreport->item->condition->text];
-    $report->wind_chill       = $subreport->wind->chill;
-    $report->wind_speed       = $subreport->wind->speed;
-    $report->wind_direction   = $subreport->wind->direction;
-    $report->humidity         = $subreport->atmosphere->humidity;
+    $report->condition        = (
+      $item ? [$item->condition->temp, $item->condition->text] : [null, null]
+    );
+    $report->wind_chill       = ($wind ? $wind->chill : null);
+    $report->wind_speed       = ($wind ? $wind->speed : null);
+    $report->wind_direction   = ($wind ? $wind->direction : null);
+    $report->humidity         = ($atmos ? $atmos->humidity : null);
     $report->heat_index       = null; // We calculate this at the end.
-    $report->sunrise          = $subreport->astronomy->sunrise;
-    $report->sunset           = $subreport->astronomy->sunset;
-    $report->location         = "";
+    $report->sunrise          = ($atmos ? $atmos->sunrise : null);
+    $report->sunset           = ($atmos ? $atmos->sunset : null);
 
     // ensure our object types are how we intend
     $report->city             = (string) trim($report->city);
