@@ -103,9 +103,10 @@ class WeatherReport {
   }
 
   public function standardizeReport(&$raw_report) {
-    if ($raw_report->query->count < 1 ||
-        is_null($raw_report->query->results)) {
-      return false;
+    if (!$raw_report || !$raw_report->query ||
+        $raw_report->query->count < 1 || is_null($raw_report->query->results)) {
+       debug_print_backtrace(); die('hell');
+        return false;
     }
     $subreport = $raw_report->query->results->channel;
 
@@ -314,7 +315,9 @@ class WeatherReport {
   }
 
   public function getAsObject() {
-    if ($this->location == 666 || strtolower($this->location) == "hell") {
+    if (strlen($this->location) == 0) {
+      $report = null;
+    } else if ($this->location == 666 || strtolower($this->location) == "hell") {
       $report = $this->standardizeReportHell();
     } else {
       $report = $this->downloadReport();
