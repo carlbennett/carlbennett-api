@@ -20,10 +20,11 @@ class StatusJSON extends View {
     }
     $flags = (Common::isBrowser(getenv("HTTP_USER_AGENT")) ? JSON_PRETTY_PRINT : 0);
     echo json_encode([
-      "remote_address" => $model->remote_address,
-      "remote_geoinfo" => $model->remote_geoinfo,
-      "timestamp"      => $model->timestamp->format("r"),
-      "version_info"   => $model->version_info,
+      "remote_address"    => $model->remote_address,
+      "remote_geoinfo"    => $model->remote_geoinfo,
+      "remote_user_agent" => $model->remote_user_agent,
+      "timestamp"         => $model->timestamp->format("r"),
+      "version_info"      => $model->version_info,
     ], $flags);
   }
 

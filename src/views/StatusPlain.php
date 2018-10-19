@@ -32,6 +32,7 @@ class StatusPlain extends View {
     } else {
       echo "remote_geoinfo " . gettype($model->remote_geoinfo) . "\n";
     }
+    echo "remote_user_agent " . $model->remote_user_agent . "\n";
     echo "timestamp " . $model->timestamp->format("r") . "\n";
     foreach ($model->version_info as $key => $val) {
       echo "version_info_" . $key . " " . $val . "\n";

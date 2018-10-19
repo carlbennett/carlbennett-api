@@ -38,10 +38,11 @@ class Status extends Controller {
   }
 
   protected function getStatus(StatusModel &$model) {
-    $model->remote_address = getenv("REMOTE_ADDR");
-    $model->remote_geoinfo = GeoIP::get($model->remote_address);
-    $model->timestamp      = new DateTime("now", new DateTimeZone("UTC"));
-    $model->version_info   = Common::$version;
+    $model->remote_address    = getenv("REMOTE_ADDR");
+    $model->remote_geoinfo    = GeoIP::get($model->remote_address);
+    $model->remote_user_agent = getenv("HTTP_USER_AGENT");
+    $model->timestamp         = new DateTime("now", new DateTimeZone("UTC"));
+    $model->version_info      = Common::$version;
     return true;
   }
 
