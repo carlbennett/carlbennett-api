@@ -2,7 +2,7 @@
 
 namespace CarlBennett\API\Libraries;
 
-use \CarlBennett\API\Libraries\Logger;
+use \CarlBennett\MVC\Libraries\Logger;
 
 abstract class Model {
 

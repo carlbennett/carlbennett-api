@@ -13,7 +13,7 @@ use \CarlBennett\API\Controllers\Status as StatusController;
 use \CarlBennett\API\Controllers\Weather as WeatherController;
 use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\ControllerNotFoundException;
-use \CarlBennett\API\Libraries\Logger;
+use \CarlBennett\MVC\Libraries\Logger;
 use \DateTime;
 use \DateTimeZone;
 use \SplObjectStorage;

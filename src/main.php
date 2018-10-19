@@ -24,11 +24,11 @@ use \CarlBennett\API\Libraries\Cache;
 use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\APIException;
 use \CarlBennett\API\Libraries\Exceptions\ClassNotFoundException;
-use \CarlBennett\API\Libraries\Logger;
 use \CarlBennett\API\Libraries\Router;
 use \CarlBennett\MVC\Libraries\Common as CommonMVCLib;
 use \CarlBennett\MVC\Libraries\DatabaseDriver;
 use \CarlBennett\MVC\Libraries\GlobalErrorHandler;
+use \CarlBennett\MVC\Libraries\Logger;
 use \ReflectionClass;
 
 function main() {

@@ -4,9 +4,9 @@ namespace CarlBennett\API\Libraries;
 
 use \CarlBennett\API\Libraries\ColorNames;
 use \CarlBennett\API\Libraries\Common;
-use \CarlBennett\API\Libraries\Logger;
 use \CarlBennett\API\Libraries\Magic8Ball;
 use \CarlBennett\API\Libraries\WeatherReport;
+use \CarlBennett\MVC\Libraries\Logger;
 
 class HipChat {
 

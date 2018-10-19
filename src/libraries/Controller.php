@@ -2,8 +2,8 @@
 
 namespace CarlBennett\API\Libraries;
 
-use \CarlBennett\API\Libraries\Logger;
 use \CarlBennett\API\Libraries\Router;
+use \CarlBennett\MVC\Libraries\Logger;
 
 abstract class Controller {
 
