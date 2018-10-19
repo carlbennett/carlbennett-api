@@ -10,6 +10,7 @@ use \CarlBennett\MVC\Libraries\View;
 
 class Update extends Controller {
   public function &run( Router &$router, View &$view, array &$args ) {
+
     $model = new UpdateModel();
     $query_object = (object) $router->getRequestQueryArray();
 
