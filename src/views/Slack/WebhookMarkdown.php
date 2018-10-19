@@ -2,24 +2,22 @@
 
 namespace CarlBennett\API\Views\Slack;
 
-use \CarlBennett\API\Libraries\Common;
-use \CarlBennett\API\Libraries\Exceptions\IncorrectModelException;
-use \CarlBennett\API\Libraries\Model;
-use \CarlBennett\API\Libraries\View;
 use \CarlBennett\API\Libraries\WeatherReport;
-use \CarlBennett\API\Models\Slack\Webhook as SlackWebhookModel;
+use \CarlBennett\API\Models\Slack\Webhook as WebhookModel;
+use \CarlBennett\MVC\Libraries\Common;
+use \CarlBennett\MVC\Libraries\Exceptions\IncorrectModelException;
+use \CarlBennett\MVC\Libraries\Model;
+use \CarlBennett\MVC\Libraries\View;
 
 class WebhookMarkdown extends View {
-
   public function getMimeType() {
-    return "text/x-markdown;charset=utf-8";
+    return 'text/x-markdown;charset=utf-8';
   }
 
-  public function render(Model &$model) {
-    if (!$model instanceof SlackWebhookModel) {
+  public function render( Model &$model ) {
+    if ( !$model instanceof WebhookModel ) {
       throw new IncorrectModelException();
     }
     echo $model->result;
   }
-
 }

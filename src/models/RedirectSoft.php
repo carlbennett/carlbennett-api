@@ -4,8 +4,8 @@ namespace CarlBennett\API\Models;
 
 use \CarlBennett\MVC\Libraries\Model;
 
-class Status extends Model {
+class RedirectSoft extends Model {
 
-  public $status;
+  public $location;
 
 }

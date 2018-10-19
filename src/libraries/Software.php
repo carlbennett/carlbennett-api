@@ -2,10 +2,10 @@
 
 namespace CarlBennett\API\Libraries;
 
-use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\SoftwareLicenseNotFoundException
   as SLNFException;
 use \CarlBennett\API\Libraries\Software\License as SoftwareLicense;
+use \CarlBennett\MVC\Libraries\Common;
 use \CarlBennett\MVC\Libraries\DatabaseDriver;
 use \InvalidArgumentException;
 use \StdClass;

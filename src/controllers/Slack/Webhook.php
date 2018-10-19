@@ -2,37 +2,35 @@
 
 namespace CarlBennett\API\Controllers\Slack;
 
-use \CarlBennett\API\Libraries\Controller;
-use \CarlBennett\API\Libraries\Exceptions\UnspecifiedViewException;
-use \CarlBennett\API\Libraries\Exceptions\MethodNotAllowedException;
 use \CarlBennett\API\Libraries\Slack as SlackLib;
-use \CarlBennett\API\Libraries\Router;
 use \CarlBennett\API\Models\Slack\Webhook as SlackWebhookModel;
-use \CarlBennett\API\Views\Slack\WebhookMarkdown as SlackWebhookMarkdownView;
+use \CarlBennett\MVC\Libraries\Controller;
+use \CarlBennett\MVC\Libraries\Router;
+use \CarlBennett\MVC\Libraries\View;
 
 class Webhook extends Controller {
+  public function &run( Router &$router, View &$view, array &$args ) {
 
-  public function run(Router &$router) {
-    switch ($router->getRequestPathExtension()) {
-      case "md": case "":
-        $view = new SlackWebhookMarkdownView();
-      break;
-      default:
-        throw new UnspecifiedViewException();
+    $model = new SlackWebhookModel();
+
+    if ( $router->getRequestMethod() != 'POST' ) {
+      $model->_responseCode = 405;
+      $model->_responseHeaders[ 'Allow' ] = 'POST';
+      $model->_responseTTL = 0;
+      return $model;
     }
-    if ($router->getRequestMethod() != "POST") {
-      throw new MethodNotAllowedException(["POST"]);
-    }
-    $model         = new SlackWebhookModel();
-    $webhook_data  = $router->getRequestBodyArray();
-    $model->result = (new SlackLib())->handleWebhook($webhook_data);
-    ob_start();
-    $view->render($model);
-    $router->setResponseCode(200);
-    $router->setResponseTTL(0);
-    $router->setResponseHeader("Content-Type", $view->getMimeType());
-    $router->setResponseContent(ob_get_contents());
-    ob_end_clean();
+
+    $body = $router->getRequestBodyArray();
+
+    $model->result = ( new SlackLib() )->handleWebhook( $body );
+
+    $view->render( $model );
+
+    $model->_responseCode = 200;
+    $model->_responseHeaders[ 'Content-Type' ] = $view->getMimeType();
+    $model->_responseTTL = 0;
+
+    return $model;
+
   }
-
 }

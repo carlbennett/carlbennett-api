@@ -2,7 +2,7 @@
 
 namespace CarlBennett\API\Libraries;
 
-use \CarlBennett\API\Libraries\Pair;
+use \CarlBennett\MVC\Libraries\Pair;
 
 class HTTPHeader extends Pair {
 

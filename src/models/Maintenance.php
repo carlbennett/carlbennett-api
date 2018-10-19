@@ -2,7 +2,7 @@
 
 namespace CarlBennett\API\Models;
 
-use \CarlBennett\API\Libraries\Model;
+use \CarlBennett\MVC\Libraries\Model;
 
 class Maintenance extends Model {
 

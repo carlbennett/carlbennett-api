@@ -2,46 +2,30 @@
 
 namespace CarlBennett\API\Controllers;
 
-use \CarlBennett\API\Libraries\Controller;
-use \CarlBennett\API\Libraries\Exceptions\UnspecifiedViewException;
-use \CarlBennett\API\Libraries\Router;
 use \CarlBennett\API\Libraries\WeatherReport;
 use \CarlBennett\API\Models\Weather as WeatherModel;
-use \CarlBennett\API\Views\WeatherJSON as WeatherJSONView;
-use \CarlBennett\API\Views\WeatherMarkdown as WeatherMarkdownView;
-use \CarlBennett\API\Views\WeatherPlain as WeatherPlainView;
+use \CarlBennett\MVC\Libraries\Controller;
+use \CarlBennett\MVC\Libraries\Router;
+use \CarlBennett\MVC\Libraries\View;
 
 class Weather extends Controller {
+  public function &run( Router &$router, View &$view, array &$args ) {
 
-  public function run(Router &$router) {
-    switch ($router->getRequestPathExtension()) {
-      case "json": case "":
-        $view = new WeatherJSONView();
-      break;
-      case "md":
-        $view = new WeatherMarkdownView();
-      break;
-      case "txt":
-        $view = new WeatherPlainView();
-      break;
-      default:
-        throw new UnspecifiedViewException();
-    }
-    $query    = $router->getRequestQueryArray();
-    $location = (isset($query["location"]) ? $query["location"] : "");
-    $model    = new WeatherModel($location);
-    $this->getWeatherReport($model);
-    ob_start();
-    $view->render($model);
-    $router->setResponseCode((!isset($query["location"]) ? 400 : 200));
-    $router->setResponseTTL(300);
-    $router->setResponseHeader("Content-Type", $view->getMimeType());
-    $router->setResponseContent(ob_get_contents());
-    ob_end_clean();
+    $model = new WeatherModel();
+    $query = $router->getRequestQueryArray();
+
+    $model->location = (
+      isset($query[ 'location' ]) ? $query[ 'location' ] : ''
+    );
+    $model->weather_report = new WeatherReport( $model->location );
+
+    $view->render( $model );
+
+    $model->_responseCode = ( empty( $model->location ) ? 400 : 200 );
+    $model->_responseHeaders[ 'Content-Type' ] = $view->getMimeType();
+    $model->_responseTTL = 300;
+
+    return $model;
+
   }
-
-  protected function getWeatherReport(WeatherModel &$model) {
-    $model->weather_report = new WeatherReport($model->location);
-  }
-
 }
