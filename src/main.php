@@ -80,32 +80,32 @@ function main() {
       '#^/$#', 'RedirectSoft', 'RedirectSoftHtml', '/status.txt'
     );
     $router->addRoute( // URL: /slack/webhook.md
-      '#^/slack/webhook\.md/?$#', 'Slack\\Webhook', 'Slack\\WebhookMarkdown'
+      '#^/slack/webhook\.md$#', 'Slack\\Webhook', 'Slack\\WebhookMarkdown'
     );
     $router->addRoute( // URL: /software/update.json
-      '#^/software/update\.json/?$#', 'Software\\Update', 'Software\\UpdateJSON'
+      '#^/software/update\.json$#', 'Software\\Update', 'Software\\UpdateJSON'
     );
     $router->addRoute( // URL: /software/verifylicense.json
-      '#^/software/verifylicense\.json/?$#',
+      '#^/software/verifylicense\.json$#',
       'Software\\VerifyLicense', 'Software\\VerifyLicenseJSON'
     );
     $router->addRoute( // URL: /status
       '#^/status/?$#', 'RedirectSoft', 'RedirectSoftHtml', '/status.json'
     );
     $router->addRoute( // URL: /status.json
-      '#^/status\.json/?$#', 'Status', 'StatusJSON'
+      '#^/status\.json$#', 'Status', 'StatusJSON'
     );
     $router->addRoute( // URL: /status.txt
-      '#^/status\.txt/?$#', 'Status', 'StatusPlain'
+      '#^/status\.txt$#', 'Status', 'StatusPlain'
     );
     $router->addRoute( // URL: /weather.json
-      '#^/weather\.json/?/?$#', 'Weather', 'WeatherJSON'
+      '#^/weather\.json$#', 'Weather', 'WeatherJSON'
     );
     $router->addRoute( // URL: /weather.md
-      '#^/weather\.md/?$#', 'Weather', 'WeatherMarkdown'
+      '#^/weather\.md$#', 'Weather', 'WeatherMarkdown'
     );
     $router->addRoute( // URL: /weather.txt
-      '#^/weather\.txt/?$#', 'Weather', 'WeatherPlain'
+      '#^/weather\.txt$#', 'Weather', 'WeatherPlain'
     );
     $router->addRoute( // URL: *
       '#.*#', 'EndpointNotFound', 'EndpointNotFoundHtml'
