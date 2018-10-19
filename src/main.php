@@ -25,6 +25,7 @@ use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Exceptions\APIException;
 use \CarlBennett\API\Libraries\Exceptions\ClassNotFoundException;
 use \CarlBennett\API\Libraries\Router;
+use \CarlBennett\API\Libraries\VersionInfo;
 use \CarlBennett\MVC\Libraries\Common as CommonMVCLib;
 use \CarlBennett\MVC\Libraries\DatabaseDriver;
 use \CarlBennett\MVC\Libraries\GlobalErrorHandler;
@@ -39,7 +40,7 @@ function main() {
     }
     require(__DIR__ . "/../lib/autoload.php");
 
-    GlobalErrorHandler::createOverrides();
+    #GlobalErrorHandler::createOverrides();
 
     Logger::initialize();
 
@@ -47,8 +48,9 @@ function main() {
         file_get_contents(__DIR__ . "/../etc/config.json")
     );
 
-    Common::$cache   = new Cache();
-    Common::$version = Common::getVersionProperties();
+    VersionInfo::$version = VersionInfo::get();
+
+    Common::$cache = new Cache();
 
     CommonMVCLib::$database = null;
 

@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "carlbennett/php-mvc",
-            "version": "2.2.1",
+            "version": "2.3.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carlbennett/php-mvc.git",
-                "reference": "d0d67aee0ef14791edfae342357201fbfa7502a0"
+                "reference": "3a272fa42d7b9ba37d71a317c54732589ccccdaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carlbennett/php-mvc/zipball/d0d67aee0ef14791edfae342357201fbfa7502a0",
-                "reference": "d0d67aee0ef14791edfae342357201fbfa7502a0",
+                "url": "https://api.github.com/repos/carlbennett/php-mvc/zipball/3a272fa42d7b9ba37d71a317c54732589ccccdaf",
+                "reference": "3a272fa42d7b9ba37d71a317c54732589ccccdaf",
                 "shasum": ""
             },
             "require": {
@@ -41,6 +41,7 @@
                     "CarlBennett\\MVC\\Libraries\\": "src/libraries"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0"
             ],
@@ -65,11 +66,7 @@
                 "restful",
                 "system"
             ],
-            "support": {
-                "source": "https://github.com/carlbennett/php-mvc/tree/2.2.1",
-                "issues": "https://github.com/carlbennett/php-mvc/issues"
-            },
-            "time": "2016-11-23 19:32:37"
+            "time": "2018-05-27 22:46:32"
         }
     ],
     "packages-dev": [],

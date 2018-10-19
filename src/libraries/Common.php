@@ -56,14 +56,6 @@ final class Common {
     return $response;
   }
 
-  public static function getVersionProperties() {
-    $versions           = new StdClass();
-    $versions->api      = (is_readable("../etc/.rsync-version") ?
-                          file_get_contents("../etc/.rsync-version") : null);
-    $versions->php      = phpversion();
-    return $versions;
-  }
-
   public static function intervalToString($di, $zero_interval = "") {
     if (!$di instanceof DateInterval) return null;
     $buf = "";

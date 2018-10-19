@@ -2,16 +2,17 @@
 
 namespace CarlBennett\API\Controllers;
 
-use \CarlBennett\API\Libraries\Common;
 use \CarlBennett\API\Libraries\Controller;
 use \CarlBennett\API\Libraries\Exceptions\UnspecifiedViewException;
 use \CarlBennett\API\Libraries\Router;
+use \CarlBennett\API\Libraries\VersionInfo;
 use \CarlBennett\API\Models\Status as StatusModel;
 use \CarlBennett\API\Views\StatusJSON as StatusJSONView;
 use \CarlBennett\API\Views\StatusPlain as StatusPlainView;
 use \CarlBennett\MVC\Libraries\GeoIP;
 use \DateTime;
 use \DateTimeZone;
+use \StdClass;
 
 class Status extends Controller {
 
@@ -38,11 +39,19 @@ class Status extends Controller {
   }
 
   protected function getStatus(StatusModel &$model) {
-    $model->remote_address    = getenv("REMOTE_ADDR");
-    $model->remote_geoinfo    = GeoIP::get($model->remote_address);
-    $model->remote_user_agent = getenv("HTTP_USER_AGENT");
-    $model->timestamp         = new DateTime("now", new DateTimeZone("UTC"));
-    $model->version_info      = Common::$version;
+    $status = new StdClass();
+
+    $utc = new DateTimeZone( 'Etc/UTC' );
+
+    $status->healthcheck       = true;
+    $status->remote_address    = getenv( 'REMOTE_ADDR' );
+    $status->remote_geoinfo    = GeoIP::get( $status->remote_address );
+    $status->remote_user_agent = getenv( 'HTTP_USER_AGENT' );
+    $status->timestamp         = new DateTime( 'now', $utc );
+    $status->version_info      = VersionInfo::$version;
+
+    $model->status = $status;
+
     return true;
   }
 
