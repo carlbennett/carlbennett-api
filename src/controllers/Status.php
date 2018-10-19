@@ -9,6 +9,7 @@ use \CarlBennett\API\Libraries\VersionInfo;
 use \CarlBennett\API\Models\Status as StatusModel;
 use \CarlBennett\API\Views\StatusJSON as StatusJSONView;
 use \CarlBennett\API\Views\StatusPlain as StatusPlainView;
+use \CarlBennett\MVC\Libraries\Common;
 use \CarlBennett\MVC\Libraries\GeoIP;
 use \DateTime;
 use \DateTimeZone;
@@ -44,6 +45,7 @@ class Status extends Controller {
     $utc = new DateTimeZone( 'Etc/UTC' );
 
     $status->healthcheck       = true;
+    $status->is_browser        = Common::isBrowser(getenv( 'HTTP_USER_AGENT' ));
     $status->remote_address    = getenv( 'REMOTE_ADDR' );
     $status->remote_geoinfo    = GeoIP::get( $status->remote_address );
     $status->remote_user_agent = getenv( 'HTTP_USER_AGENT' );
