@@ -60,7 +60,6 @@ final class Common {
     $versions           = new StdClass();
     $versions->api      = (is_readable("../etc/.rsync-version") ?
                           file_get_contents("../etc/.rsync-version") : null);
-    $versions->newrelic = phpversion("newrelic");
     $versions->php      = phpversion();
     return $versions;
   }

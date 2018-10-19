@@ -11,7 +11,6 @@
  - [mbstring](https://php.net/manual/book.mbstring.php)
  - [pecl_geoip](https://php.net/manual/book.geoip.php)
  - [pecl_http](https://php.net/manual/http.install.php)
- - [newrelic](https://docs.newrelic.com/docs/agents/php-agent/getting-started/new-relic-php) _(optional)_
 3. Tell your web server about the new site by creating a new virtualhost/server config entry for this site.
  - This project expects to handle the entire request URI itself and not have it pre-processed by your web server. Your server should map requests to the ```/static/``` directory, and if the request cannot be mapped there (i.e. the client would get a 404 Not Found), then should fallback to letting ```/main.php``` handle the request.
 4. Copy the ```/config.sample.json``` to ```/config.json``` and then modify its contents to match your setup.
