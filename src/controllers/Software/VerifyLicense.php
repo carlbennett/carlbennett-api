@@ -14,7 +14,7 @@ class VerifyLicense extends Controller {
     $model = new VerifyLicenseModel();
     $query_object = (object) $router->getRequestQueryArray();
 
-    $model->result = (new SoftwareLib() )->handleVerifyLicense(
+    $model->result = ( new SoftwareLib() )->handleVerifyLicense(
       $query_object, $model->http_code
     );
 

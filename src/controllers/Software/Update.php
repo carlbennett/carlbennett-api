@@ -14,7 +14,7 @@ class Update extends Controller {
     $model = new UpdateModel();
     $query_object = (object) $router->getRequestQueryArray();
 
-    $model->result = (new SoftwareLib() )->handleUpdate(
+    $model->result = ( new SoftwareLib() )->handleUpdate(
       $query_object, $model->http_code
     );
 
