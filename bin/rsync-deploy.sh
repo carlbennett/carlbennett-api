@@ -9,19 +9,27 @@ fi
 
 set -e
 
-printf "[1/4] Getting version identifier of this deploy...\n"
-DEPLOY_VERSION="$(git describe --always --tags)"
+printf "[1/3] Generating version information...\n"
+# Version identifier
+printf "$(git describe --always --tags)\n" \
+  > ${SOURCE_DIRECTORY}/etc/.rsync-version
+# Version hash
+printf "$(git rev-parse HEAD)\n" \
+  >> ${SOURCE_DIRECTORY}/etc/.rsync-version
+# Version ISO8601 timestamp
+printf "$(git log -n 1 --pretty='%aI' HEAD)\n" \
+  >> ${SOURCE_DIRECTORY}/etc/.rsync-version
+# LICENSE version and ISO8601 timestamp
+printf "$(git log -n 1 --pretty='%h %aI' ./LICENSE.txt)" \
+  >> ${SOURCE_DIRECTORY}/etc/.rsync-version
 
-printf "[2/4] Building version information into this deploy...\n"
-printf "${DEPLOY_VERSION}" > ${SOURCE_DIRECTORY}/etc/.rsync-version
-
-printf "[3/4] Syncing...\n"
+printf "[2/3] Syncing...\n"
 rsync -avzc --delete --delete-excluded --delete-after --progress \
   --exclude-from="${SOURCE_DIRECTORY}/etc/rsync-exclude.txt" \
   --chown=nginx:nginx --rsync-path="sudo rsync" \
   "${SOURCE_DIRECTORY}/" "${TARGET_DIRECTORY}"
 
-printf "[4/4] Post-deploy clean up...\n"
+printf "[3/3] Post-deploy clean up...\n"
 rm ${SOURCE_DIRECTORY}/etc/.rsync-version
 
 printf "Operation complete!\n"
