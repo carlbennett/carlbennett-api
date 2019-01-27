@@ -83,7 +83,7 @@ function main() {
       '#^/slack/webhook\.md$#', 'Slack\\Webhook', 'Slack\\WebhookMarkdown'
     );
     $router->addRoute( // URL: /software/update.json
-      '#^/software/update\.json$#', 'Software\\Update', 'Software\\UpdateJSON'
+      '#^/software/update(?:\.json)?$#', 'Software\\Update', 'Software\\UpdateJSON'
     );
     $router->addRoute( // URL: /software/verifylicense.json
       '#^/software/verifylicense\.json$#',
