@@ -98,15 +98,6 @@ function main() {
     $router->addRoute( // URL: /status.txt
       '#^/status\.txt$#', 'Status', 'StatusPlain'
     );
-    $router->addRoute( // URL: /weather.json
-      '#^/weather\.json$#', 'Weather', 'WeatherJSON'
-    );
-    $router->addRoute( // URL: /weather.md
-      '#^/weather\.md$#', 'Weather', 'WeatherMarkdown'
-    );
-    $router->addRoute( // URL: /weather.txt
-      '#^/weather\.txt$#', 'Weather', 'WeatherPlain'
-    );
     $router->addRoute( // URL: *
       '#.*#', 'EndpointNotFound', 'EndpointNotFoundHtml'
     );

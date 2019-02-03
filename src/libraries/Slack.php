@@ -3,7 +3,6 @@
 namespace CarlBennett\API\Libraries;
 
 use \CarlBennett\API\Libraries\Magic8Ball;
-use \CarlBennett\API\Libraries\WeatherReport;
 use \CarlBennett\MVC\Libraries\Common;
 use \CarlBennett\MVC\Libraries\GeoIP;
 use \CarlBennett\MVC\Libraries\Logger;
@@ -96,17 +95,6 @@ class Slack {
             $response .= "geoinfo " . gettype($geoinfo) . "\n";
           }
           $response = "```" . $response . "```";
-        }
-        break;
-      }
-      case "weather": {
-        $location = trim($text);
-        $info     = (new WeatherReport($location))->getAsMarkdown();
-        if ($info === false) {
-          $response = "*Error:* unable to download report"
-           . " or location not given.";
-        } else {
-          $response = str_replace("**", "*", $info);
         }
         break;
       }

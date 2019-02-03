@@ -2,7 +2,6 @@
 
 namespace CarlBennett\API\Views\Slack;
 
-use \CarlBennett\API\Libraries\WeatherReport;
 use \CarlBennett\API\Models\Slack\Webhook as WebhookModel;
 use \CarlBennett\MVC\Libraries\Common;
 use \CarlBennett\MVC\Libraries\Exceptions\IncorrectModelException;
