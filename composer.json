@@ -6,9 +6,7 @@
         "carl",
         "bennett",
         "api",
-        "slack",
-        "hipchat",
-        "weather",
+        "automation",
         "integration"
     ],
     "homepage": "https://github.com/carlbennett/carlbennett-api",
@@ -20,28 +18,24 @@
         }
     ],
     "config": {
-      "vendor-dir": "lib"
+        "vendor-dir": "lib"
     },
     "autoload": {
         "psr-4": {
-            "CarlBennett\\API\\Controllers\\": "src/controllers",
-            "CarlBennett\\API\\Libraries\\": "src/libraries",
-            "CarlBennett\\API\\Models\\": "src/models",
-            "CarlBennett\\API\\Templates\\": "src/templates",
-            "CarlBennett\\API\\Views\\": "src/views"
+            "CarlBennett\\API\\": "src/"
         }
     },
     "require": {
-        "carlbennett/php-mvc": "~2",
+        "erusev/parsedown": "^1.7",
         "ext-curl": "*",
-        "ext-geoip": "*",
         "ext-gmp": "*",
-        "ext-http": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mcrypt": "*",
-        "ext-memcached": "*",
         "ext-pdo": "*",
-        "php-64bit": ">=5.5.0"
+        "geoip2/geoip2": "~2.0",
+        "php-64bit": "^8.1",
+        "phpmailer/phpmailer": "^6.0",
+        "ramsey/uuid": "^4.2"
     }
 }

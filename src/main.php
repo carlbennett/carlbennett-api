@@ -1,7 +1,7 @@
 <?php
 /**
  *  carlbennett-api, a PHP-based API framework designed by @carlbennett
- *  Copyright (C) 2015-2016  Carl Bennett
+ *  Copyright (C) 2015-2024 Carl Bennett
  *  This file is part of carlbennett-api.
  *
  *  carlbennett-api is free software: you can redistribute it and/or modify
@@ -20,92 +20,76 @@
 
 namespace CarlBennett\API;
 
-use \CarlBennett\API\Libraries\Exceptions\APIException;
-use \CarlBennett\API\Libraries\Exceptions\ClassNotFoundException;
-use \CarlBennett\API\Libraries\VersionInfo;
-use \CarlBennett\MVC\Libraries\Cache;
-use \CarlBennett\MVC\Libraries\Common;
-use \CarlBennett\MVC\Libraries\DatabaseDriver;
-use \CarlBennett\MVC\Libraries\GlobalErrorHandler;
-use \CarlBennett\MVC\Libraries\Logger;
-use \CarlBennett\MVC\Libraries\Router;
-use \ReflectionClass;
+use \CarlBennett\API\Libraries\Core\Config;
+use \CarlBennett\API\Libraries\Core\Router;
 
-function main() {
+function main(int $argc, array $argv): int
+{
+    if (\version_compare(\phpversion(), '8.1', '<'))
+    {
+        \http_response_code(500);
+        echo 'Minimum supported PHP version is 8.1, detected version: ' . \phpversion() . \PHP_EOL;
+        exit(1);
+    }
 
-  if (!file_exists(__DIR__ . '/../lib/autoload.php')) {
-      http_response_code(500);
-      exit('Server misconfigured. Please run `composer install`.');
-  }
-  require(__DIR__ . '/../lib/autoload.php');
+    if (!\file_exists(__DIR__ . '/../lib/autoload.php') || !\filesize(__DIR__ . '/../lib/autoload.php'))
+    {
+        \http_response_code(500);
+        echo 'Autoloader is missing, run `composer install`'.\PHP_EOL;
+        exit(1);
+    }
+    require(__DIR__ . '/../lib/autoload.php');
 
-  #GlobalErrorHandler::createOverrides();
+    \date_default_timezone_set('Etc/UTC');
+    \CarlBennett\API\Libraries\Core\Logger::registerAPMs();
+    \CarlBennett\API\Libraries\Core\GlobalErrorHandler::createOverrides();
 
-  date_default_timezone_set('Etc/UTC');
-
-  Logger::initialize();
-
-  Common::$config = json_decode(file_get_contents(
-      __DIR__ . '/../etc/config.json'
-  ));
-
-  VersionInfo::$version = VersionInfo::get();
-
-  Common::$cache = new Cache(
-    Common::$config->Memcache->servers,
-    Common::$config->Memcache->connect_timeout,
-    Common::$config->Memcache->tcp_nodelay
-  );
-
-  Common::$database = null;
-
-  DatabaseDriver::$character_set = Common::$config->MySQL->character_set;
-  DatabaseDriver::$database_name = Common::$config->MySQL->database;
-  DatabaseDriver::$password      = Common::$config->MySQL->password;
-  DatabaseDriver::$servers       = Common::$config->MySQL->servers;
-  DatabaseDriver::$timeout       = Common::$config->MySQL->timeout;
-  DatabaseDriver::$username      = Common::$config->MySQL->username;
-
-  $router = new Router(
-    'CarlBennett\\API\\Controllers\\',
-    'CarlBennett\\API\\Views\\'
-  );
-
-  if ( Common::$config->Router->maintenance ) {
-    $router->addRoute( // URL: *
-      '#.*#', 'Maintenance', 'MaintenanceHtml'
-    );
-  } else {
-    $router->addRoute( // URL: /
-      '#^/$#', 'RedirectSoft', 'RedirectSoftHtml', '/status.txt'
-    );
-    $router->addRoute( // URL: /slack/webhook.md
-      '#^/slack/webhook\.md$#', 'Slack\\Webhook', 'Slack\\WebhookMarkdown'
-    );
-    $router->addRoute( // URL: /software/update.json
-      '#^/software/update(?:\.json)?$#', 'Software\\Update', 'Software\\UpdateJSON'
-    );
-    $router->addRoute( // URL: /software/verifylicense.json
-      '#^/software/verifylicense\.json$#',
-      'Software\\VerifyLicense', 'Software\\VerifyLicenseJSON'
-    );
-    $router->addRoute( // URL: /status
-      '#^/status/?$#', 'RedirectSoft', 'RedirectSoftHtml', '/status.json'
-    );
-    $router->addRoute( // URL: /status.json
-      '#^/status\.json$#', 'Status', 'StatusJSON'
-    );
-    $router->addRoute( // URL: /status.txt
-      '#^/status\.txt$#', 'Status', 'StatusPlain'
-    );
-    $router->addRoute( // URL: *
-      '#.*#', 'EndpointNotFound', 'EndpointNotFoundHtml'
-    );
-  }
-
-  $router->route();
-  $router->send();
-
+    if (\php_sapi_name() == 'cli')
+    {
+        return \CarlBennett\API\Libraries\CLI\Handler::invoke($argc, $argv);
+    }
+    else
+    {
+        Router::$route_not_found = ['Core\\NotFound', ['Core\\NotFoundHtml', 'Core\\NotFoundJson', 'Core\\NotFoundPlain']];
+        $maintenance = Config::instance()->root['router']['maintenance'] ?? true;
+        if ((\is_bool($maintenance) && $maintenance) || (isset($maintenance[0]) && \is_bool($maintenance[0]) && $maintenance[0]))
+        {
+            $message = isset($maintenance[1]) && \is_string($maintenance[1]) && !empty($maintenance[1]) ? $maintenance[1] : null;
+            Router::$routes = [
+                ['#.*#', 'Core\\Maintenance', ['Core\\MaintenanceHtml', 'Core\\MaintenanceJson', 'Core\\MaintenancePlain'], $message],
+            ];
+            Router::invoke();
+            return 1;
+        }
+        else
+        {
+            $Core_Redirect_Views = ['Core\\RedirectHtml', 'Core\\RedirectJson', 'Core\\RedirectPlain'];
+            Router::$routes = [
+                ['#^/$#', 'Core\\Redirect', $Core_Redirect_Views, '/status.txt'],
+                ['#^/\.well-known\/change-password$#', 'Core\\Redirect', $Core_Redirect_Views, '/user/change-password'],
+                ['#^/convert/chartoint(?:\.json)?$#', 'Convert\\CharToInt', ['Convert\\CharToIntJson']],
+                ['#^/convert/crc32(?:\.json)?$#', 'Convert\\CRC32', ['Convert\\CRC32Json']],
+                ['#^/convert/inttochar(?:\.json)?$#', 'Convert\\IntToChar', ['Convert\\IntToCharJson']],
+                ['#^/convert/md5(?:\.json)?$#', 'Convert\\MD5', ['Convert\\MD5Json']],
+                ['#^/convert/sha1(?:\.json)?$#', 'Convert\\SHA1', ['Convert\\SHA1Json']],
+                ['#^/convert/sha256(?:\.json)?$#', 'Convert\\SHA256', ['Convert\\SHA256Json']],
+                ['#^/convert/sha384(?:\.json)?$#', 'Convert\\SHA384', ['Convert\\SHA384Json']],
+                ['#^/convert/sha512(?:\.json)?$#', 'Convert\\SHA512', ['Convert\\SHA512Json']],
+                ['#^/convert/urldecode(?:\.json)?$#', 'Convert\\UrlDecode', ['Convert\\UrlDecodeJson']],
+                ['#^/convert/urlencode(?:\.json)?$#', 'Convert\\UrlEncode', ['Convert\\UrlEncodeJson']],
+                ['#^/slack/webhook(?:\.md)?$#', 'Slack\\Webhook', ['Slack\\WebhookMarkdown']],
+                ['#^/software/update(?:\.json)?$#', 'Software\\Update', ['Software\\UpdateJson']],
+                ['#^/software/verifylicense(?:\.json)?$#', 'Software\\VerifyLicense', ['Software\\VerifyLicenseJson']],
+                ['#^/status$#', 'Core\\Status', ['Core\\StatusJson', 'Core\\StatusPlain']],
+                ['#^/status/$#', 'Core\\Redirect', $Core_Redirect_Views, '/status'],
+                ['#^/status\.json$#', 'Core\\Status', ['Core\\StatusJson']],
+                ['#^/status\.txt$#', 'Core\\Status', ['Core\\StatusPlain']],
+                ['#^/user/change-password(?:\.json)?$#', 'User\\ChangePassword', ['User\\ChangePasswordJson']],
+            ];
+            Router::invoke();
+            return 0;
+        }
+    }
 }
 
-main();
+exit(main($argc ?? 0, $argv ?? []));
