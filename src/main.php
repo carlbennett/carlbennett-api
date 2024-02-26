@@ -59,7 +59,7 @@ function main(int $argc, array $argv): int
                 ['#.*#', 'Core\\Maintenance', ['Core\\MaintenanceHtml', 'Core\\MaintenanceJson', 'Core\\MaintenancePlain'], $message],
             ];
             Router::invoke();
-            return 1;
+            return \CarlBennett\API\Libraries\CLI\Handler::INVOKE_FAILED;
         }
         else
         {
@@ -87,7 +87,7 @@ function main(int $argc, array $argv): int
                 ['#^/user/change-password(?:\.json)?$#', 'User\\ChangePassword', ['User\\ChangePasswordJson']],
             ];
             Router::invoke();
-            return 0;
+            return \CarlBennett\API\Libraries\CLI\Handler::INVOKE_SUCCESS;
         }
     }
 }
