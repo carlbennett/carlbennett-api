@@ -21,6 +21,7 @@
 .Spotlight-V100
 .Trashes
 ._*
+/etc/config.json
 /lib/
 /tmp/
 Thumbs.db

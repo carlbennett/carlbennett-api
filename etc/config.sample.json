@@ -8,17 +8,7 @@
       }
     ]
   },
-  "Memcache": {
-    "connect_timeout": 1.0,
-    "tcp_nodelay": true,
-    "servers": [
-      {
-        "hostname": "localhost",
-        "port": 11211
-      }
-    ]
-  },
-  "MySQL": {
+  "mysql": {
     "character_set": "utf8",
     "database": "carlbennett_api",
     "password": "",
@@ -31,11 +21,11 @@
     "timeout": 3,
     "username": ""
   },
-  "Router": {
-    "maintenance": true,
-    "map": []
+  "router": {
+    "asset_versioning": true,
+    "maintenance": [true, "Currently undergoing routine maintenance. Check back later."]
   },
-  "Software": {
+  "software": {
     "products": [
       {
         "name": "Example",
