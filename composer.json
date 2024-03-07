@@ -10,7 +10,7 @@
         "integration"
     ],
     "homepage": "https://github.com/carlbennett/carlbennett-api",
-    "license": "AGPLv3",
+    "license": "MIT",
     "authors": [
         {
             "name": "Carl Bennett",
