@@ -70,6 +70,7 @@ function main(int $argc, array $argv): int
                 ['#^/convert/chartoint(?:\.json)?$#', 'Convert\\CharToInt', ['Convert\\CharToIntJson']],
                 ['#^/convert/crc32(?:\.json)?$#', 'Convert\\CRC32', ['Convert\\CRC32Json']],
                 ['#^/convert/inttochar(?:\.json)?$#', 'Convert\\IntToChar', ['Convert\\IntToCharJson']],
+                ['#^/convert/magic8ball(?:\.json)?$#', 'Convert\\Magic8Ball', ['Convert\\Magic8BallJson']],
                 ['#^/convert/md5(?:\.json)?$#', 'Convert\\MD5', ['Convert\\MD5Json']],
                 ['#^/convert/sha1(?:\.json)?$#', 'Convert\\SHA1', ['Convert\\SHA1Json']],
                 ['#^/convert/sha256(?:\.json)?$#', 'Convert\\SHA256', ['Convert\\SHA256Json']],
