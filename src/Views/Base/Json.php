@@ -11,7 +11,7 @@ abstract class Json implements \CarlBennett\API\Interfaces\View
      *
      * @return int The flags to pass to json_encode().
      */
-    public static function jsonFlags() : int
+    public static function jsonFlags(): int
     {
         $PRETTY = (
             \php_sapi_name() == 'cli' || \CarlBennett\API\Libraries\Core\VersionInfo::isBrowser()
@@ -24,7 +24,7 @@ abstract class Json implements \CarlBennett\API\Interfaces\View
      *
      * @return string The MIME-type for this View class.
      */
-    public static function mimeType() : string
+    public static function mimeType(): string
     {
         return self::MIMETYPE_JSON . ';charset=utf-8';
     }

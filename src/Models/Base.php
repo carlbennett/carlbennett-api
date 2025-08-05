@@ -4,7 +4,7 @@ namespace CarlBennett\API\Models;
 
 class Base implements \CarlBennett\API\Interfaces\Model, \JsonSerializable
 {
-    public int $_responseCode = 500;
+    public int $_responseCode = \CarlBennett\API\Libraries\Core\HTTPCode::INTERNAL_SERVER_ERROR;
     public array $_responseHeaders = [
         'Cache-Control' => 'max-age=0,no-cache,no-store', // disables cache in the browser for all PHP pages by default.
         'X-Content-Type-Options' => 'nosniff', // Prevent browsers from incorrectly detecting non-scripts as scripts.

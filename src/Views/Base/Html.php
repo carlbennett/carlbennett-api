@@ -11,7 +11,7 @@ abstract class Html implements \CarlBennett\API\Interfaces\View
      *
      * @return string The MIME-type for this View class.
      */
-    public static function mimeType() : string
+    public static function mimeType(): string
     {
         return self::MIMETYPE_HTML . ';charset=utf-8';
     }
