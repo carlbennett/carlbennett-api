@@ -32,8 +32,6 @@
 /etc/config.sample.json
 /etc/rsync-deploy.sh
 /etc/rsync-exclude.txt
-/lib/carlbennett/php-mvc/README.md
-/lib/carlbennett/php-mvc/src/libraries/Exceptions/Reference.md
 /src/libraries/Exceptions/Reference.md
 /tmp/
 Thumbs.db
